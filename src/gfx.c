@@ -68,7 +68,7 @@ bool iterate_gfx_bitmaps(bool (*callback)(ALLEGRO_BITMAP *bitmap)) {
     iter = hashmap_iter_create(gfx_bitmaps);
     if (iter == NULL)
         return false;
-    while (entry = hashmap_iter_next(iter)) {
+    while ((entry = hashmap_iter_next(iter))) {
         ALLEGRO_BITMAP *bitmap = *hashmap_entry_get_value_ptr(entry);
         if (!callback(bitmap))
             return false;
