@@ -1,6 +1,7 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_acodec.h>
 #include <allegro5/allegro_audio.h>
+#include <allegro5/allegro_font.h>
 #include <allegro5/allegro_image.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -49,6 +50,12 @@ int main(int argc, char **argv) {
     // initialize the audio codecs addon
     if (!al_init_acodec_addon()) {
         printf("al_init_acodec_addon() failed\n");
+        goto cleanup;
+    }
+
+    // initialize the font addon
+    if (!al_init_font_addon()) {
+        printf("al_init_font_addon() failed\n");
         goto cleanup;
     }
 
