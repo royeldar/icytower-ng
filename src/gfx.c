@@ -53,3 +53,25 @@ ALLEGRO_BITMAP *get_gfx_bitmap(const char *path) {
     assert(gfx_bitmaps != NULL);
     return get_resource(gfx_bitmaps, path);
 }
+
+/**
+ * @brief Iterate on all bitmaps and call a callback on each one
+ *
+ * @param callback callback which is called for every bitmap
+ * @return true if iteration was done successfully
+ * @return false otherwise
+ */
+bool iterate_gfx_bitmaps(bool (*callback)(ALLEGRO_BITMAP *bitmap)) {
+    struct hashmap_iter *iter = NULL;
+    struct hashmap_entry *entry = NULL;
+    assert(gfx_bitmaps != NULL);
+    iter = hashmap_iter_create(gfx_bitmaps);
+    if (iter == NULL)
+        return false;
+    while (entry = hashmap_iter_next(iter)) {
+        ALLEGRO_BITMAP *bitmap = *hashmap_entry_get_value_ptr(entry);
+        if (!callback(bitmap))
+            return false;
+    }
+    return true;
+}

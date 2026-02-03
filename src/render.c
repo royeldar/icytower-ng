@@ -14,6 +14,8 @@
 #include "shared_state.h"
 #include "synchronization.h"
 
+#define MASK_COLOR  (al_map_rgb(154, 20, 146))
+
 #define WIDTH   640
 #define HEIGHT  480
 
@@ -24,6 +26,11 @@
 static ALLEGRO_BITMAP *bitmap = NULL;
 static ALLEGRO_DISPLAY *display = NULL;
 static bool fullscreen = false;
+
+static bool convert_mask_to_alpha_callback(ALLEGRO_BITMAP *bitmap) {
+    al_convert_mask_to_alpha(bitmap, MASK_COLOR);
+    return true;
+}
 
 static int render_setup() {
     // create a 640x480 bitmap
@@ -47,6 +54,11 @@ static int render_setup() {
     // load bitmaps
     if (!load_gfx_bitmaps(GFX_DIR)) {
         printf("load_gfx_bitmaps() failed\n");
+        return STATUS_FAILURE;
+    }
+    // convert mask color to alpha
+    if (!iterate_gfx_bitmaps(convert_mask_to_alpha_callback)) {
+        printf("iterate_gfx_bitmaps() failed\n");
         return STATUS_FAILURE;
     }
     return STATUS_SUCCESS;
