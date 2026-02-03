@@ -4,5 +4,5 @@ set -e
 
 rm -rf repo
 
-flatpak-builder --force-clean --repo=repo builddir io.github.royeldar.game.yml
-flatpak build-bundle repo game.flatpak io.github.royeldar.game
+flatpak-builder --force-clean --repo=repo builddir io.github.royeldar.icytower.yml
+flatpak build-bundle repo icytower.flatpak io.github.royeldar.icytower

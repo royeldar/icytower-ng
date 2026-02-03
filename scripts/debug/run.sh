@@ -2,4 +2,4 @@
 
 set -e
 
-flatpak run --devel --command=sh io.github.royeldar.game
+flatpak run --devel --command=sh io.github.royeldar.icytower

@@ -1,8 +1,8 @@
-id: io.github.royeldar.game
+id: io.github.royeldar.icytower
 runtime: org.freedesktop.Platform
 runtime-version: '25.08'
 sdk: org.freedesktop.Sdk
-command: game
+command: icytower
 
 finish-args:
   - --device=dri
@@ -83,7 +83,7 @@ modules:
       - type: archive
         url: https://github.com/liballeg/allegro5/releases/download/5.2.11.2/allegro-5.2.11.2.tar.gz
         sha256: f035fe128dd5f2412c32add41ed4058ad8154f6e9571084574487d67dbdbaae0
-  - name: game
+  - name: icytower
     buildsystem: meson
     sources:
       - type: dir

@@ -1,4 +1,4 @@
-FROM game-base-win32
+FROM icytower-base-win32
 
 WORKDIR /app
 
@@ -13,4 +13,4 @@ RUN unzip allegro_deps.zip -d src
 
 RUN ./win32/build.sh
 
-RUN cd install/bin && zip -r ../../game.zip .
+RUN cd install/bin && zip -r ../../icytower.zip .

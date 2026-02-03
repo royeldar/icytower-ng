@@ -2,4 +2,4 @@
 
 set -e
 
-flatpak uninstall -y --user io.github.royeldar.game
+flatpak uninstall -y --user io.github.royeldar.icytower

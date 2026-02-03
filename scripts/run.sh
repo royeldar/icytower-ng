@@ -2,4 +2,4 @@
 
 set -e
 
-flatpak run io.github.royeldar.game
+flatpak run io.github.royeldar.icytower

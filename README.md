@@ -1,8 +1,8 @@
-# Game
+# Icy Tower
 
 ## Brief description
 
-This is a simple game framework built using Allegro5.
+This is an open source remake of Icy Tower 1.3.1 using Allegro 5.
 
 ## Building instructions
 
@@ -24,7 +24,7 @@ Therefore, one can build a Flatpak bundle; in order to do that, run
 ./scripts/build.sh
 ```
 
-This will create an application bundle called `game.flatpak`.
+This will create an application bundle called `icytower.flatpak`.
 
 One may also build a Flatpak bundle containing debugging information, by running
 
@@ -32,7 +32,7 @@ One may also build a Flatpak bundle containing debugging information, by running
 ./scripts/debug/build.sh
 ```
 
-This will create a runtime bundle called `game.Debug.flatpak`.
+This will create a runtime bundle called `icytower.Debug.flatpak`.
 
 ### Windows
 
@@ -43,13 +43,13 @@ Building for Windows is done using MinGW, inside a Docker container:
 ./scripts/win32/build.sh
 ```
 
-This creates a base Docker image called `game-base-win32`, and then a zip archive called `game.zip`.
+This creates a base Docker image called `icytower-base-win32`, and then a zip archive called `icytower.zip`.
 
 ## Installation instructions
 
 ### Linux
 
-Install the Flatpak bundle `game.flatpak` by running
+Install the Flatpak bundle `icytower.flatpak` by running
 
 ```sh
 ./scripts/install.sh
@@ -69,11 +69,11 @@ Uninstallation can be done by running
 
 ### Windows
 
-Simply unzip the archive `game.zip` anywhere, then run `game.exe`.
+Simply unzip the archive `icytower.zip` anywhere, then run `icytower.exe`.
 
 ## Debugging (only for Linux)
 
-Install the Flatpak bundle `game.Debug.flatpak` by running
+Install the Flatpak bundle `icytower.Debug.flatpak` by running
 
 ```sh
 ./scripts/debug/install.sh
@@ -85,7 +85,7 @@ Enter a shell environment inside the Flatpak runtime:
 ./scripts/debug/run.sh
 ```
 
-Then, one may run stuff like `gdb game`, etc.
+Then, one may run stuff like `gdb icytower`, etc.
 
 Uninstallation can be done by running
 

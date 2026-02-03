@@ -2,4 +2,4 @@
 
 set -e
 
-flatpak install -y --user game.flatpak
+flatpak install -y --user icytower.flatpak

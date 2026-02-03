@@ -2,4 +2,4 @@
 
 set -e
 
-flatpak install -y --user game.Debug.flatpak
+flatpak install -y --user icytower.Debug.flatpak

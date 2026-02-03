@@ -2,4 +2,4 @@
 
 set -e
 
-docker build -f Dockerfile.base -t game-base-win32 .
+docker build -f Dockerfile.base -t icytower-base-win32 .

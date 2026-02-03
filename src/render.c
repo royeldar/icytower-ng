@@ -17,7 +17,7 @@
 #define WIDTH   640
 #define HEIGHT  480
 
-#define TITLE   "game"
+#define TITLE   "Icy Tower"
 
 #define GFX_DIR "gfx"
 

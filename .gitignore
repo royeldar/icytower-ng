@@ -4,7 +4,7 @@
 .vscode
 build
 builddir
-game.flatpak
-game.Debug.flatpak
-game.zip
+icytower.flatpak
+icytower.Debug.flatpak
+icytower.zip
 repo

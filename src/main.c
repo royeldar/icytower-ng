@@ -11,7 +11,7 @@
 #include "render.h"
 #include "synchronization.h"
 
-#define APP_NAME    "io.github.royeldar.game"
+#define APP_NAME    "io.github.royeldar.icytower"
 
 int main(int argc, char **argv) {
     ALLEGRO_THREAD *thread = NULL;

@@ -1,6 +1,6 @@
-project('game', 'c')
+project('icytower', 'c')
 
-app_id = 'io.github.royeldar.game'
+app_id = 'io.github.royeldar.icytower'
 
 cc = meson.get_compiler('c')
 
@@ -94,7 +94,7 @@ else
 endif
 
 executable(
-  'game',
+  'icytower',
   sources: sources,
   dependencies: liballegro5_deps,
   win_subsystem: 'windows',
@@ -114,12 +114,12 @@ install_subdir(
 
 if host_machine.system() == 'linux'
   install_data(
-    'misc/game.desktop',
+    'misc/icytower.desktop',
     rename: app_id + '.desktop',
     install_dir: get_option('datadir') / 'applications',
   )
   install_data(
-    'misc/game.svg',
+    'misc/icytower.svg',
     rename: app_id + '.svg',
     install_dir: get_option('datadir') / 'icons/hicolor/scalable/apps',
   )

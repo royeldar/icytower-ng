@@ -2,7 +2,7 @@
 
 set -e
 
-rm -f game.zip
+rm -f icytower.zip
 
 IMAGE_ID=
 CONTAINER_ID=
@@ -16,9 +16,9 @@ cleanup() {
 
 trap cleanup EXIT
 
-docker image inspect game-base-win32 >/dev/null
+docker image inspect icytower-base-win32 >/dev/null
 docker build -f Dockerfile.win32 --iidfile .iidfile .
 IMAGE_ID=$(cat .iidfile)
 docker create --cidfile .cidfile $IMAGE_ID >/dev/null
 CONTAINER_ID=$(cat .cidfile)
-docker cp $CONTAINER_ID:/app/game.zip .
+docker cp $CONTAINER_ID:/app/icytower.zip .
