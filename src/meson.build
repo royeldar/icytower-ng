@@ -103,12 +103,12 @@ executable(
 
 install_subdir(
   'misc/gfx',
-  exclude_files: '.gitattributes',
+  exclude_files: ['.gitattributes', '.gitignore'],
   install_dir: assets_dir,
 )
 install_subdir(
   'misc/sfx',
-  exclude_files: '.gitattributes',
+  exclude_files: ['.gitattributes', '.gitignore'],
   install_dir: assets_dir,
 )
 

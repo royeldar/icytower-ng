@@ -6,6 +6,24 @@ This is an open source remake of Icy Tower 1.3.1 using Allegro 5.
 
 ## Building instructions
 
+First, one need to extract the assets from the original game.
+
+Download and install Icy Tower 1.3.1, then put the following files in `assets/`:
+
+- `data.dat` (found in `<installation directory>/data/data.dat`)
+- `sfx13.dat` (found in `<installation directory>/data/sfx13.dat`)
+- `harold.dat` (found in `<installation directory>/characters/harold_the_homeboy/harold.dat`)
+- `dave.dat` (found in `<installation directory>/characters/disco_dave/dave.dat`)
+
+Then run
+
+```sh
+cd assets
+./extract.sh
+```
+
+This will populate `src/misc/gfx/` & `src/misc/sfx/` with the needed assets.
+
 ### Linux
 
 Building for a Linux distribution is pretty easy; simply run
