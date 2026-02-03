@@ -66,7 +66,9 @@ static int render_setup() {
 
 static void draw_frame(const struct shared_state *shared_state) {
     ALLEGRO_BITMAP *title_bg = get_gfx_bitmap("title_bg.bmp");
+    ALLEGRO_BITMAP *title = get_gfx_bitmap("title.bmp");
     al_draw_bitmap(title_bg, 0, 0, 0);
+    al_draw_bitmap(title, 250, 20, 0);
 }
 
 static void render_frame(const struct shared_state *shared_state) {
