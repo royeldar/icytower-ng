@@ -27,17 +27,13 @@
 
 #define CONFIG_FILE "config.ini"
 
-static struct shared_state initial_shared_state = {
-    .fullscreen = false,
-};
+static struct shared_state initial_shared_state;
 
 ALLEGRO_TIMER *g_timer = NULL;
 
 static bool quit = false;
 
 bool game_setup() {
-    initialize_shared_state(&initial_shared_state);
-
     // create an empty event queue
     g_event_queue = al_create_event_queue();
     if (g_event_queue == NULL) {
