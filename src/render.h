@@ -1,3 +1,5 @@
+#pragma once
+
 #include <allegro5/allegro.h>
 
 #define HALT_DRAWING    1

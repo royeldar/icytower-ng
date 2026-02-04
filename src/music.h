@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdbool.h>
 
 bool play_music(const char *path);

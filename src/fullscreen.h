@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdbool.h>
 
 extern int g_fullscreen;

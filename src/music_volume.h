@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdbool.h>
 
 #define DEFAULT_MUSIC_VOLUME    6
