@@ -9,10 +9,13 @@
 #include <stdio.h>
 
 #include "events.h"
+#include "exit.h"
 #include "fonts.h"
 #include "fullscreen.h"
 #include "gfx.h"
+#include "menu.h"
 #include "render.h"
+#include "scene.h"
 #include "shared_state.h"
 #include "synchronization.h"
 
@@ -72,10 +75,15 @@ static int render_setup() {
 }
 
 static void draw_frame(const struct shared_state *shared_state) {
-    ALLEGRO_BITMAP *title_bg = get_gfx_bitmap("title_bg.bmp");
-    ALLEGRO_BITMAP *title = get_gfx_bitmap("title.bmp");
-    al_draw_bitmap(title_bg, 0, 0, 0);
-    al_draw_bitmap(title, 250, 20, 0);
+    enum scene scene = shared_state->scene;
+    switch (scene) {
+    case MENU_SCENE:
+        draw_menu(shared_state);
+        break;
+    case EXIT_SCENE:
+        draw_exit(shared_state);
+        break;
+    }
 }
 
 static void render_frame(const struct shared_state *shared_state) {

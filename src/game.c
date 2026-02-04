@@ -12,9 +12,9 @@
 #include "fullscreen.h"
 #include "game.h"
 #include "keyboard.h"
-#include "music.h"
 #include "music_volume.h"
 #include "render.h"
+#include "scene.h"
 #include "sfx.h"
 #include "shared_state.h"
 #include "synchronization.h"
@@ -82,23 +82,22 @@ bool game_setup() {
     // initialize fullscreen variable
     initial_shared_state.fullscreen = g_fullscreen;
 
+    // initialize scene variable
+    initial_shared_state.scene = g_scene;
+
     // initialize shared state used by the rendering thread
     initialize_shared_state(&initial_shared_state);
 
-    // start playing background music
-    play_music("bg_menu.ogg");
+    // initialize game scene
+    initialize_scene();
 
     return true;
 }
 
 void update_frame(struct shared_state *shared_state) {
-    if (is_key_pressed(ALLEGRO_KEY_ESCAPE)) {
-        quit = true;
-    }
-    if (is_key_down(ALLEGRO_KEY_ALT) && is_key_pressed(ALLEGRO_KEY_ENTER)) {
-        g_fullscreen = !g_fullscreen;
-    }
+    update_scene(&quit);
     shared_state->fullscreen = g_fullscreen;
+    shared_state->scene = g_scene;
 }
 
 void game_loop() {
@@ -148,7 +147,6 @@ void game_loop() {
 }
 
 void game_cleanup() {
-    stop_music();
     if (g_config != NULL) {
         // write fullscreen option to configuration
         write_fullscreen_option();
