@@ -17,6 +17,7 @@
 #include "scene.h"
 #include "sfx.h"
 #include "shared_state.h"
+#include "sound_volume.h"
 #include "synchronization.h"
 
 #define FPS 50
@@ -76,6 +77,12 @@ bool game_setup() {
     // read music volume option from configuration
     if (!read_music_volume_option()) {
         printf("read_music_volume_option() failed\n");
+        return false;
+    }
+
+    // read sound volume option from configuration
+    if (!read_sound_volume_option()) {
+        printf("read_sound_volume_option() failed\n");
         return false;
     }
 
@@ -152,6 +159,8 @@ void game_cleanup() {
         write_fullscreen_option();
         // write music volume option to configuration
         write_music_volume_option();
+        // write sound volume option to configuration
+        write_sound_volume_option();
         // save configuration
         save_config(CONFIG_FILE);
     }

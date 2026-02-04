@@ -11,6 +11,7 @@
 #include "music.h"
 #include "scene.h"
 #include "shared_state.h"
+#include "sound.h"
 
 /**
  * @brief Initialize the menu scene
@@ -23,8 +24,10 @@ void initialize_menu() {
  * @brief Update the menu scene one tick
  */
 void update_menu() {
-    if (is_key_pressed(ALLEGRO_KEY_ESCAPE))
+    if (is_key_pressed(ALLEGRO_KEY_ESCAPE)) {
+        play_sound("menu_change.ogg");
         g_scene = EXIT_SCENE;
+    }
 }
 
 /**

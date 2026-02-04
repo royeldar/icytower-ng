@@ -89,6 +89,8 @@ sources = files(
   'scene.c',
   'sfx.c',
   'shared_state.c',
+  'sound.c',
+  'sound_volume.c',
   'synchronization.c',
   'triple_buffer.c',
 )
