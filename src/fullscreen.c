@@ -10,12 +10,13 @@
 #include "config.h"
 #include "fullscreen.h"
 
+#define GFX "gfx"
 #define FULLSCREEN  "fullscreen"
 
 int g_fullscreen = -1;
 
 bool read_fullscreen_option() {
-    const char *str = al_get_config_value(g_config, NULL, FULLSCREEN);
+    const char *str = al_get_config_value(g_config, GFX, FULLSCREEN);
     if (str != NULL) {
         switch (atoi(str)) {
         case 1:
@@ -36,6 +37,6 @@ bool read_fullscreen_option() {
 void write_fullscreen_option() {
     if (g_fullscreen != -1) {
         const char *str = g_fullscreen ? "1" : "0";
-        al_set_config_value(g_config, NULL, FULLSCREEN, str);
+        al_set_config_value(g_config, GFX, FULLSCREEN, str);
     }
 }
