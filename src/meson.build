@@ -79,6 +79,8 @@ sources = files(
   'gfx.c',
   'hashmap.c',
   'keyboard.c',
+  'music.c',
+  'music_volume.c',
   'render.c',
   'resources.c',
   'sfx.c',

@@ -12,6 +12,8 @@
 #include "fullscreen.h"
 #include "game.h"
 #include "keyboard.h"
+#include "music.h"
+#include "music_volume.h"
 #include "render.h"
 #include "sfx.h"
 #include "shared_state.h"
@@ -75,11 +77,20 @@ bool game_setup() {
         return false;
     }
 
+    // read music volume option from configuration
+    if (!read_music_volume_option()) {
+        printf("read_music_volume_option() failed\n");
+        return false;
+    }
+
     // initialize fullscreen variable
     initial_shared_state.fullscreen = g_fullscreen;
 
     // initialize shared state used by the rendering thread
     initialize_shared_state(&initial_shared_state);
+
+    // start playing background music
+    play_music("bg_menu.ogg");
 
     return true;
 }
@@ -141,9 +152,12 @@ void game_loop() {
 }
 
 void game_cleanup() {
+    stop_music();
     if (g_config != NULL) {
         // write fullscreen option to configuration
         write_fullscreen_option();
+        // write music volume option to configuration
+        write_music_volume_option();
         // save configuration
         save_config(CONFIG_FILE);
     }
