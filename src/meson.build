@@ -84,6 +84,7 @@ sources = files(
   'menu.c',
   'music.c',
   'music_volume.c',
+  'random.c',
   'render.c',
   'resources.c',
   'scene.c',

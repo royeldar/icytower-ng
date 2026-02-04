@@ -6,6 +6,7 @@
 #include <allegro5/allegro.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <time.h>
 
 #include "config.h"
 #include "events.h"
@@ -13,6 +14,7 @@
 #include "game.h"
 #include "keyboard.h"
 #include "music_volume.h"
+#include "random.h"
 #include "render.h"
 #include "scene.h"
 #include "sfx.h"
@@ -94,6 +96,11 @@ bool game_setup() {
 
     // initialize shared state used by the rendering thread
     initialize_shared_state(&initial_shared_state);
+
+    // seed random number generators
+    srand_msvc(time(NULL));
+    rand_msvc();
+    srand_custom(rand_msvc() % 2367);
 
     // initialize game scene
     initialize_scene();
