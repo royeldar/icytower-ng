@@ -9,6 +9,7 @@
 #include <stdio.h>
 
 #include "events.h"
+#include "fonts.h"
 #include "fullscreen.h"
 #include "gfx.h"
 #include "render.h"
@@ -28,30 +29,9 @@ static ALLEGRO_BITMAP *bitmap = NULL;
 static ALLEGRO_DISPLAY *display = NULL;
 static bool fullscreen = false;
 
-static ALLEGRO_FONT *font1 = NULL;
-static ALLEGRO_FONT *font2 = NULL;
-static ALLEGRO_FONT *font3 = NULL;
-
 static bool convert_mask_to_alpha_callback(ALLEGRO_BITMAP *bitmap) {
     al_convert_mask_to_alpha(bitmap, MASK_COLOR);
     return true;
-}
-
-static bool create_fonts() {
-    int ranges[] = { 0x20, 0x7f };
-    font1 = al_grab_font_from_bitmap(get_gfx_bitmap("font1.bmp"), 1, ranges);
-    font2 = al_grab_font_from_bitmap(get_gfx_bitmap("font2.bmp"), 1, ranges);
-    font3 = al_grab_font_from_bitmap(get_gfx_bitmap("font3.bmp"), 1, ranges);
-    return (font1 != NULL && font2 != NULL && font3 != NULL);
-}
-
-static void destroy_fonts() {
-    if (font1 != NULL)
-        al_destroy_font(font1);
-    if (font2 != NULL)
-        al_destroy_font(font2);
-    if (font3 != NULL)
-        al_destroy_font(font3);
 }
 
 static int render_setup() {

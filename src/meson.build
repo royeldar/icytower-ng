@@ -74,6 +74,7 @@ sources = files(
   'config.c',
   'events.c',
   'flatpak.c',
+  'fonts.c',
   'fullscreen.c',
   'game.c',
   'gfx.c',
