@@ -8,6 +8,7 @@
 #include "exit.h"
 #include "menu.h"
 #include "scene.h"
+#include "shared_state.h"
 
 enum scene g_scene = MENU_SCENE;
 
@@ -42,4 +43,21 @@ void update_scene(bool *quit) {
     }
     if (g_scene != scene)
         initialize_scene();
+}
+
+/**
+ * @brief Draw the game scene
+ *
+ * @param shared_state shared state
+ */
+void draw_scene(const struct shared_state *shared_state) {
+    enum scene scene = (enum scene)shared_state->scene;
+    switch (scene) {
+    case MENU_SCENE:
+        draw_menu(shared_state);
+        break;
+    case EXIT_SCENE:
+        draw_exit(shared_state);
+        break;
+    }
 }

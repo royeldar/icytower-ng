@@ -9,11 +9,9 @@
 #include <stdio.h>
 
 #include "events.h"
-#include "exit.h"
 #include "fonts.h"
 #include "fullscreen.h"
 #include "gfx.h"
-#include "menu.h"
 #include "render.h"
 #include "scene.h"
 #include "shared_state.h"
@@ -74,24 +72,12 @@ static int render_setup() {
     return STATUS_SUCCESS;
 }
 
-static void draw_frame(const struct shared_state *shared_state) {
-    enum scene scene = shared_state->scene;
-    switch (scene) {
-    case MENU_SCENE:
-        draw_menu(shared_state);
-        break;
-    case EXIT_SCENE:
-        draw_exit(shared_state);
-        break;
-    }
-}
-
 static void render_frame(const struct shared_state *shared_state) {
     float width = al_get_display_width(display);
     float height = al_get_display_height(display);
     float scale = fminf(width / WIDTH, height / HEIGHT);
     al_set_target_bitmap(bitmap);
-    draw_frame(shared_state);
+    draw_scene(shared_state);
     al_set_target_backbuffer(display);
     al_clear_to_color(al_map_rgb(0, 0, 0));
     al_draw_scaled_bitmap(bitmap,

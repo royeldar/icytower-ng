@@ -92,7 +92,7 @@ bool game_setup() {
     initial_shared_state.fullscreen = g_fullscreen;
 
     // initialize scene variable
-    initial_shared_state.scene = g_scene;
+    initial_shared_state.scene = (int)g_scene;
 
     // initialize shared state used by the rendering thread
     initialize_shared_state(&initial_shared_state);
@@ -111,7 +111,7 @@ bool game_setup() {
 void update_frame(struct shared_state *shared_state) {
     update_scene(&quit);
     shared_state->fullscreen = g_fullscreen;
-    shared_state->scene = g_scene;
+    shared_state->scene = (int)g_scene;
 }
 
 void game_loop() {

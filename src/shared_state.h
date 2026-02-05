@@ -2,11 +2,9 @@
 
 #include <stdbool.h>
 
-#include "scene.h"
-
 struct shared_state {
     bool fullscreen;
-    enum scene scene;
+    int scene;
 };
 
 void initialize_shared_state(const struct shared_state *shared_state);
