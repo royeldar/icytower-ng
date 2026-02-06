@@ -13,6 +13,7 @@
 #include "fullscreen.h"
 #include "game.h"
 #include "keyboard.h"
+#include "menu.h"
 #include "music_volume.h"
 #include "random.h"
 #include "render.h"
@@ -94,6 +95,14 @@ bool game_setup() {
     // initialize scene variable
     initial_shared_state.scene = (int)g_scene;
 
+    // initialize menu variables
+    initial_shared_state.menu_page = (int)g_menu_page;
+    initial_shared_state.menu_item = g_menu_item;
+
+    // initialize volume variables
+    initial_shared_state.sound_volume = g_sound_volume;
+    initial_shared_state.music_volume = g_music_volume;
+
     // initialize shared state used by the rendering thread
     initialize_shared_state(&initial_shared_state);
 
@@ -112,6 +121,10 @@ void update_frame(struct shared_state *shared_state) {
     update_scene(&quit);
     shared_state->fullscreen = g_fullscreen;
     shared_state->scene = (int)g_scene;
+    shared_state->menu_page = (int)g_menu_page;
+    shared_state->menu_item = g_menu_item;
+    shared_state->sound_volume = g_sound_volume;
+    shared_state->music_volume = g_music_volume;
 }
 
 void game_loop() {

@@ -5,6 +5,10 @@
 struct shared_state {
     bool fullscreen;
     int scene;
+    int menu_page;
+    int menu_item;
+    int sound_volume;
+    int music_volume;
 };
 
 void initialize_shared_state(const struct shared_state *shared_state);
