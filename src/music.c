@@ -15,17 +15,18 @@ static ALLEGRO_SAMPLE_ID music_id;
 static bool music_playing = false;
 
 /**
- * @brief Play the audio sample corresponding to the given filename in a loop
+ * @brief Play the audio sample corresponding to the given filename in a loop, if none is currently playing
  *
  * @param path filename (relative to the directory the audio samples were loaded from)
  * @return true if the audio sample was played successfully
  * @return false otherwise
  */
 bool play_music(const char *path) {
-    assert(!music_playing);
-    music_playing = al_play_sample(get_sfx_sample(path),
-        (float)g_music_volume / (float)MAX_MUSIC_VOLUME, 0.0, 1.0,
-        ALLEGRO_PLAYMODE_LOOP, &music_id);
+    if (!music_playing) {
+        music_playing = al_play_sample(get_sfx_sample(path),
+            (float)g_music_volume / (float)MAX_MUSIC_VOLUME, 0.0, 1.0,
+            ALLEGRO_PLAYMODE_LOOP, &music_id);
+    }
     return music_playing;
 }
 
