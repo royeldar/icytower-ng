@@ -10,6 +10,7 @@
 
 #include "config.h"
 #include "events.h"
+#include "eye_candy.h"
 #include "fullscreen.h"
 #include "game.h"
 #include "keyboard.h"
@@ -89,6 +90,12 @@ bool game_setup() {
         return false;
     }
 
+    // read eye candy option from configuration
+    if (!read_eye_candy_option()) {
+        printf("read_eye_candy_option() failed\n");
+        return false;
+    }
+
     // initialize fullscreen variable
     initial_shared_state.fullscreen = g_fullscreen;
 
@@ -102,6 +109,9 @@ bool game_setup() {
     // initialize volume variables
     initial_shared_state.sound_volume = g_sound_volume;
     initial_shared_state.music_volume = g_music_volume;
+
+    // initialize eye candy variable
+    initial_shared_state.eye_candy = g_eye_candy;
 
     // initialize shared state used by the rendering thread
     initialize_shared_state(&initial_shared_state);
@@ -125,6 +135,7 @@ void update_frame(struct shared_state *shared_state) {
     shared_state->menu_item = g_menu_item;
     shared_state->sound_volume = g_sound_volume;
     shared_state->music_volume = g_music_volume;
+    shared_state->eye_candy = g_eye_candy;
 }
 
 void game_loop() {
@@ -181,6 +192,8 @@ void game_cleanup() {
         write_music_volume_option();
         // write sound volume option to configuration
         write_sound_volume_option();
+        // write eye candy option to configuration
+        write_eye_candy_option();
         // save configuration
         save_config(CONFIG_FILE);
     }

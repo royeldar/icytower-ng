@@ -6,6 +6,7 @@
 #include <assert.h>
 #include <stdbool.h>
 
+#include "eye_candy.h"
 #include "fonts.h"
 #include "fullscreen.h"
 #include "gfx.h"
@@ -147,7 +148,11 @@ static void update_menu_page() {
         } else if ((g_menu_page == GAME_OPTIONS_PAGE) && (g_menu_item == 1)) {
             // TODO floor
         } else if ((g_menu_page == GFX_OPTIONS_PAGE) && (g_menu_item == 0)) {
-            // TODO eye candy
+            play_sound("menu_change.ogg");
+            if (left && (g_eye_candy > 0))
+                g_eye_candy--;
+            else if (right && (g_eye_candy < MAX_EYE_CANDY))
+                g_eye_candy++;
         } else if ((g_menu_page == SOUND_OPTIONS_PAGE) && (g_menu_item == 0)) {
             play_sound("menu_change.ogg");
             if (left && (g_sound_volume > 0))
@@ -212,6 +217,8 @@ static void draw_menu_page(const struct shared_state *shared_state) {
     char sound_volume_str[MAX_SOUND_VOLUME + 1];
     char music_volume_str[MAX_MUSIC_VOLUME + 1];
     unsigned int i;
+    int eye_candy = shared_state->eye_candy;
+    char *eye_candy_str = NULL;
     enum menu_page menu_page = (enum menu_page)shared_state->menu_page;
     int menu_item = shared_state->menu_item;
     switch (menu_page) {
@@ -265,9 +272,21 @@ static void draw_menu_page(const struct shared_state *shared_state) {
             "Back");
         break;
     case GFX_OPTIONS_PAGE:
+        switch (eye_candy) {
+        case 0:
+            eye_candy_str = "None";
+            break;
+        case 1:
+            eye_candy_str = "Some";
+            break;
+        case 2:
+            eye_candy_str = "Lots";
+            break;
+        }
+        assert(eye_candy_str != NULL);
         al_draw_textf(g_font1, al_map_rgb(255, 255, 255),
             40, 270, ALLEGRO_ALIGN_LEFT,
-            "Eye Candy: %s", "Lots");
+            "Eye Candy: %s", eye_candy_str);
         al_draw_textf(g_font1, al_map_rgb(255, 255, 255),
             40, 298, ALLEGRO_ALIGN_LEFT,
             "Fullscreen: %s", (fullscreen ? "Yes" : "No"));

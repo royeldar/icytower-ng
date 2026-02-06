@@ -95,6 +95,7 @@ sources = files(
   'sound_volume.c',
   'synchronization.c',
   'triple_buffer.c',
+  'eye_candy.c',
 )
 
 if host_machine.system() == 'linux'
