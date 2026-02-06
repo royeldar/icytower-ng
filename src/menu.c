@@ -111,7 +111,8 @@ static void update_menu_page() {
         } else if ((g_menu_page == MAIN_PAGE) && (g_menu_item == 1)) {
             // TODO replay
         } else if ((g_menu_page == MAIN_PAGE) && (g_menu_item == 2)) {
-            // TODO instructions
+            play_sound("menu_change.ogg");
+            g_scene = INSTRUCTIONS_SCENE;
         } else if ((g_menu_page == MAIN_PAGE) && (g_menu_item == 3)) {
             play_sound("menu_change.ogg");
             g_menu_page = OPTIONS_PAGE;

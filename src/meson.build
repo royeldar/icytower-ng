@@ -80,6 +80,7 @@ sources = files(
   'game.c',
   'gfx.c',
   'hashmap.c',
+  'instructions.c',
   'keyboard.c',
   'menu.c',
   'music.c',

@@ -6,6 +6,7 @@
 #include <stdbool.h>
 
 #include "exit.h"
+#include "instructions.h"
 #include "menu.h"
 #include "scene.h"
 #include "shared_state.h"
@@ -19,6 +20,9 @@ void initialize_scene() {
     switch (g_scene) {
     case MENU_SCENE:
         initialize_menu();
+        break;
+    case INSTRUCTIONS_SCENE:
+        initialize_instructions();
         break;
     case EXIT_SCENE:
         initialize_exit();
@@ -36,6 +40,9 @@ void update_scene(bool *quit) {
     switch (scene) {
     case MENU_SCENE:
         update_menu();
+        break;
+    case INSTRUCTIONS_SCENE:
+        update_instructions();
         break;
     case EXIT_SCENE:
         update_exit(quit);
@@ -55,6 +62,9 @@ void draw_scene(const struct shared_state *shared_state) {
     switch (scene) {
     case MENU_SCENE:
         draw_menu(shared_state);
+        break;
+    case INSTRUCTIONS_SCENE:
+        draw_instructions(shared_state);
         break;
     case EXIT_SCENE:
         draw_exit(shared_state);
