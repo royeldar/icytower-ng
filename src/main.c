@@ -3,6 +3,7 @@
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_image.h>
+#include <allegro5/allegro_primitives.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -56,6 +57,12 @@ int main(int argc, char **argv) {
     // initialize the font addon
     if (!al_init_font_addon()) {
         printf("al_init_font_addon() failed\n");
+        goto cleanup;
+    }
+
+    // initialize the primitives addon
+    if (!al_init_primitives_addon()) {
+        printf("al_init_primitives_addon() failed\n");
         goto cleanup;
     }
 
