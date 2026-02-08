@@ -71,11 +71,13 @@ endif
 
 sources = files(
   'main.c',
+  'character.c',
   'config.c',
   'controls.c',
   'events.c',
   'exit.c',
   'flatpak.c',
+  'floor.c',
   'fonts.c',
   'fullscreen.c',
   'game.c',

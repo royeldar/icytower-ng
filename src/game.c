@@ -8,10 +8,12 @@
 #include <stdio.h>
 #include <time.h>
 
+#include "character.h"
 #include "config.h"
 #include "controls.h"
 #include "events.h"
 #include "eye_candy.h"
+#include "floor.h"
 #include "fullscreen.h"
 #include "game.h"
 #include "keyboard.h"
@@ -103,6 +105,18 @@ bool game_setup() {
         return false;
     }
 
+    // read character option from configuration
+    if (!read_character_option()) {
+        printf("read_character_option() failed\n");
+        return false;
+    }
+
+    // read start floor option from configuration
+    if (!read_start_floor_option()) {
+        printf("read_start_floor_option() failed\n");
+        return false;
+    }
+
     // initialize fullscreen variable
     initial_shared_state.fullscreen = g_fullscreen;
 
@@ -126,6 +140,12 @@ bool game_setup() {
     initial_shared_state.jump_key = g_jump_key;
     initial_shared_state.pause_key = g_pause_key;
     initial_shared_state.rejump = g_rejump;
+
+    // initialize character variable
+    initial_shared_state.character = g_character;
+
+    // initialize start floor variable
+    initial_shared_state.start_floor = g_start_floor;
 
     // initialize shared state used by the rendering thread
     initialize_shared_state(&initial_shared_state);
@@ -155,6 +175,8 @@ void update_frame(struct shared_state *shared_state) {
     shared_state->jump_key = g_jump_key;
     shared_state->pause_key = g_pause_key;
     shared_state->rejump = g_rejump;
+    shared_state->character = g_character;
+    shared_state->start_floor = g_start_floor;
 }
 
 void game_loop() {
@@ -215,6 +237,10 @@ void game_cleanup() {
         write_eye_candy_option();
         // write controls options to configuration
         write_controls_options();
+        // write character option to configuration
+        write_character_option();
+        // write start floor option to configuration
+        write_start_floor_option();
         // save configuration
         save_config(CONFIG_FILE);
     }

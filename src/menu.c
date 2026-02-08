@@ -6,8 +6,10 @@
 #include <assert.h>
 #include <stdbool.h>
 
+#include "character.h"
 #include "controls.h"
 #include "eye_candy.h"
+#include "floor.h"
 #include "fonts.h"
 #include "fullscreen.h"
 #include "gfx.h"
@@ -149,9 +151,17 @@ static void update_menu_page() {
         }
     } else if (left || right) {
         if ((g_menu_page == GAME_OPTIONS_PAGE) && (g_menu_item == 0)) {
-            // TODO character
+            play_sound("menu_change.ogg");
+            if (left && (g_character > 0))
+                g_character--;
+            else if (right && (g_character < NUM_CHARACTERS - 1))
+                g_character++;
         } else if ((g_menu_page == GAME_OPTIONS_PAGE) && (g_menu_item == 1)) {
-            // TODO floor
+            play_sound("menu_change.ogg");
+            if (left && (g_start_floor > 0))
+                g_start_floor--;
+            else if (right && (g_start_floor < NUM_FLOORS - 1))
+                g_start_floor++;
         } else if ((g_menu_page == GFX_OPTIONS_PAGE) && (g_menu_item == 0)) {
             play_sound("menu_change.ogg");
             if (left && (g_eye_candy > 0))
@@ -212,10 +222,12 @@ static void draw_heroface_animation() {
 
 static void draw_menu_page(const struct shared_state *shared_state) {
     ALLEGRO_BITMAP *menu_bullet = get_gfx_bitmap("menu_bullet.bmp");
-    ALLEGRO_BITMAP *character = get_gfx_bitmap("harold/idle1.bmp");
-    ALLEGRO_BITMAP *floor_left = get_gfx_bitmap("floor01.bmp");
-    ALLEGRO_BITMAP *floor_mid = get_gfx_bitmap("floor02.bmp");
-    ALLEGRO_BITMAP *floor_right = get_gfx_bitmap("floor03.bmp");
+    int character = shared_state->character;
+    ALLEGRO_BITMAP *character_idle = get_gfx_bitmap(g_characters[character].gfx_idle1);
+    int start_floor = shared_state->start_floor;
+    ALLEGRO_BITMAP *floor_left = get_gfx_bitmap(g_floors[start_floor].left);
+    ALLEGRO_BITMAP *floor_mid = get_gfx_bitmap(g_floors[start_floor].mid);
+    ALLEGRO_BITMAP *floor_right = get_gfx_bitmap(g_floors[start_floor].right);
     bool fullscreen = shared_state->fullscreen;
     int sound_volume = shared_state->sound_volume;
     int music_volume = shared_state->music_volume;
@@ -270,7 +282,7 @@ static void draw_menu_page(const struct shared_state *shared_state) {
         al_draw_text(g_font1, al_map_rgb(255, 255, 255),
             40, 270, ALLEGRO_ALIGN_LEFT,
             "Character:");
-        al_draw_bitmap(character, 330, 308 - al_get_bitmap_height(character), 0);
+        al_draw_bitmap(character_idle, 330, 308 - al_get_bitmap_height(character_idle), 0);
         al_draw_text(g_font1, al_map_rgb(255, 255, 255),
             40, 298, ALLEGRO_ALIGN_LEFT,
             "Start Floor:");

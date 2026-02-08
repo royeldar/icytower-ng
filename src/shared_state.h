@@ -15,6 +15,8 @@ struct shared_state {
     int jump_key;
     int pause_key;
     bool rejump;
+    int character;
+    int start_floor;
 };
 
 void initialize_shared_state(const struct shared_state *shared_state);
