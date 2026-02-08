@@ -6,15 +6,18 @@
 #include <assert.h>
 #include <stdbool.h>
 
+#include "controls.h"
 #include "eye_candy.h"
 #include "fonts.h"
 #include "fullscreen.h"
 #include "gfx.h"
 #include "keyboard.h"
+#include "keymap.h"
 #include "menu.h"
 #include "music.h"
 #include "music_volume.h"
 #include "random.h"
+#include "rebind.h"
 #include "scene.h"
 #include "shared_state.h"
 #include "sound.h"
@@ -138,9 +141,11 @@ static void update_menu_page() {
             play_sound("menu_change.ogg");
             g_fullscreen = !g_fullscreen;
         } else if ((g_menu_page == CONTROLS_PAGE) && (g_menu_item < 4)) {
-            // TODO controls
+            play_sound("menu_change.ogg");
+            g_scene = REBIND_SCENE;
         } else if ((g_menu_page == CONTROLS_PAGE) && (g_menu_item == 4)) {
-            // TODO rejump
+            play_sound("menu_change.ogg");
+            g_rejump = !g_rejump;
         }
     } else if (left || right) {
         if ((g_menu_page == GAME_OPTIONS_PAGE) && (g_menu_item == 0)) {
@@ -219,6 +224,11 @@ static void draw_menu_page(const struct shared_state *shared_state) {
     unsigned int i;
     int eye_candy = shared_state->eye_candy;
     char *eye_candy_str = NULL;
+    int left_key = shared_state->left_key;
+    int right_key = shared_state->right_key;
+    int jump_key = shared_state->jump_key;
+    int pause_key = shared_state->pause_key;
+    bool rejump = shared_state->rejump;
     enum menu_page menu_page = (enum menu_page)shared_state->menu_page;
     int menu_item = shared_state->menu_item;
     switch (menu_page) {
@@ -319,28 +329,28 @@ static void draw_menu_page(const struct shared_state *shared_state) {
             "Left:");
         al_draw_textf(g_font1, al_map_rgb(255, 255, 255),
             180, 270, ALLEGRO_ALIGN_LEFT,
-            "(%s)", "Left");
+            "(%s)", get_key_name(left_key));
         al_draw_text(g_font1, al_map_rgb(255, 255, 255),
             40, 298, ALLEGRO_ALIGN_LEFT,
             "Right:");
         al_draw_textf(g_font1, al_map_rgb(255, 255, 255),
             180, 298, ALLEGRO_ALIGN_LEFT,
-            "(%s)", "Right");
+            "(%s)", get_key_name(right_key));
         al_draw_text(g_font1, al_map_rgb(255, 255, 255),
             40, 326, ALLEGRO_ALIGN_LEFT,
             "Jump:");
         al_draw_textf(g_font1, al_map_rgb(255, 255, 255),
             180, 326, ALLEGRO_ALIGN_LEFT,
-            "(%s)", "Space");
+            "(%s)", get_key_name(jump_key));
         al_draw_text(g_font1, al_map_rgb(255, 255, 255),
             40, 354, ALLEGRO_ALIGN_LEFT,
             "Pause:");
         al_draw_textf(g_font1, al_map_rgb(255, 255, 255),
             180, 354, ALLEGRO_ALIGN_LEFT,
-            "(%s)", "P");
+            "(%s)", get_key_name(pause_key));
         al_draw_textf(g_font1, al_map_rgb(255, 255, 255),
             40, 382, ALLEGRO_ALIGN_LEFT,
-            "Rejump: %s", "Yes");
+            "Rejump: %s", (rejump ? "Yes" : "No"));
         al_draw_text(g_font1, al_map_rgb(255, 255, 255),
             40, 410, ALLEGRO_ALIGN_LEFT,
             "Back");

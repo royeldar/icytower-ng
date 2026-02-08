@@ -10,6 +10,11 @@ struct shared_state {
     int sound_volume;
     int music_volume;
     int eye_candy;
+    int left_key;
+    int right_key;
+    int jump_key;
+    int pause_key;
+    bool rejump;
 };
 
 void initialize_shared_state(const struct shared_state *shared_state);

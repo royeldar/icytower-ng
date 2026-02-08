@@ -7,6 +7,7 @@
 enum scene {
     MENU_SCENE,
     INSTRUCTIONS_SCENE,
+    REBIND_SCENE,
     EXIT_SCENE,
 };
 
