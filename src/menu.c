@@ -28,8 +28,8 @@
 enum menu_page g_menu_page = MAIN_PAGE;
 int g_menu_item = 0;
 
-static unsigned int heroface_animation_ticks = 0;
-static int heroface_animation_frame = 0;
+unsigned int g_heroface_animation_ticks = 0;
+int g_heroface_animation_frame = 0;
 
 /**
  * @brief Initialize the menu scene
@@ -39,10 +39,10 @@ void initialize_menu() {
 }
 
 static void update_heroface_animation() {
-    heroface_animation_ticks++;
+    g_heroface_animation_ticks++;
     if (rand_custom() % 198 == 1) {
-        if (++heroface_animation_frame == 3)
-            heroface_animation_frame = 0;
+        if (++g_heroface_animation_frame == 3)
+            g_heroface_animation_frame = 0;
     }
 }
 
@@ -195,7 +195,9 @@ void update_menu() {
     update_menu_page();
 }
 
-static void draw_heroface_animation() {
+static void draw_heroface_animation(const struct shared_state *shared_state) {
+    unsigned int heroface_animation_ticks = shared_state->heroface_animation_ticks;
+    int heroface_animation_frame = shared_state->heroface_animation_frame;
     ALLEGRO_BITMAP *heroface = NULL;
     float w, h, dx, dy, angle;
     switch (heroface_animation_frame) {
@@ -381,6 +383,6 @@ void draw_menu(const struct shared_state *shared_state) {
     ALLEGRO_BITMAP *title = get_gfx_bitmap("title.bmp");
     al_draw_bitmap(title_bg, 0, 0, 0);
     al_draw_bitmap(title, 250, 20, 0);
-    draw_heroface_animation();
+    draw_heroface_animation(shared_state);
     draw_menu_page(shared_state);
 }

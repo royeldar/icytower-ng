@@ -13,6 +13,8 @@ enum menu_page {
 
 extern enum menu_page g_menu_page;
 extern int g_menu_item;
+extern unsigned int g_heroface_animation_ticks;
+extern int g_heroface_animation_frame;
 
 void initialize_menu();
 void update_menu();

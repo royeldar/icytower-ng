@@ -5,6 +5,8 @@
 struct shared_state {
     bool fullscreen;
     int scene;
+    unsigned int heroface_animation_ticks;
+    int heroface_animation_frame;
     int menu_page;
     int menu_item;
     int sound_volume;
