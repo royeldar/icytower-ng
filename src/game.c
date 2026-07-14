@@ -177,7 +177,7 @@ void update_frame(struct shared_state *shared_state) {
     shared_state->rejump = g_rejump;
     shared_state->character = g_character;
     shared_state->start_floor = g_start_floor;
-    shared_state->heroface_animation_ticks = g_heroface_animation_ticks;
+    shared_state->menu_animation_ticks = g_menu_animation_ticks;
     shared_state->heroface_animation_frame = g_heroface_animation_frame;
 }
 

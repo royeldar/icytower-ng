@@ -28,7 +28,7 @@
 enum menu_page g_menu_page = MAIN_PAGE;
 int g_menu_item = 0;
 
-unsigned int g_heroface_animation_ticks = 0;
+unsigned int g_menu_animation_ticks = 0;
 int g_heroface_animation_frame = 0;
 
 /**
@@ -39,7 +39,7 @@ void initialize_menu() {
 }
 
 static void update_heroface_animation() {
-    g_heroface_animation_ticks++;
+    g_menu_animation_ticks++;
     if (rand_custom() % 198 == 1) {
         if (++g_heroface_animation_frame == 3)
             g_heroface_animation_frame = 0;
@@ -196,7 +196,7 @@ void update_menu() {
 }
 
 static void draw_heroface_animation(const struct shared_state *shared_state) {
-    unsigned int heroface_animation_ticks = shared_state->heroface_animation_ticks;
+    unsigned int menu_animation_ticks = shared_state->menu_animation_ticks;
     int heroface_animation_frame = shared_state->heroface_animation_frame;
     ALLEGRO_BITMAP *heroface = NULL;
     float w, h, dx, dy, angle;
@@ -215,9 +215,9 @@ static void draw_heroface_animation(const struct shared_state *shared_state) {
     w = al_get_bitmap_width(heroface);
     h = al_get_bitmap_height(heroface);
     dx = (w / 2) + 40;
-    dy = (h / 2) + 10 + al_fixtoi(10 * al_fixsin(al_itofix(5 * heroface_animation_ticks)));
+    dy = (h / 2) + 10 + al_fixtoi(10 * al_fixsin(al_itofix(5 * menu_animation_ticks)));
     angle = al_fixtof(al_fixmul(
-        5 * al_fixsin(al_itofix(3 * heroface_animation_ticks) + (al_fixed)10),
+        5 * al_fixsin(al_itofix(3 * menu_animation_ticks) + (al_fixed)10),
         al_fixtorad_r));
     al_draw_rotated_bitmap(heroface, w / 2, h / 2, dx, dy, angle, 0);
 }
