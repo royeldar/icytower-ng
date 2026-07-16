@@ -28,6 +28,7 @@
 
 static ALLEGRO_BITMAP *bitmap = NULL;
 static ALLEGRO_DISPLAY *display = NULL;
+static unsigned int frame = 0;
 static bool fullscreen = false;
 
 static bool convert_mask_to_alpha_callback(ALLEGRO_BITMAP *bitmap) {
@@ -91,6 +92,7 @@ static void render_frame(const struct shared_state *shared_state) {
 
 static void render_loop(ALLEGRO_THREAD *thread) {
     bool dont_draw = false;
+    bool redraw = true;
     while (!al_get_thread_should_stop(thread)) {
         int event = receive_event();
         if (event == 0 && !dont_draw) {
@@ -100,8 +102,16 @@ static void render_loop(ALLEGRO_THREAD *thread) {
             if (shared_state->fullscreen != fullscreen) {
                 fullscreen = shared_state->fullscreen;
                 al_set_display_flag(display, ALLEGRO_FULLSCREEN_WINDOW, fullscreen);
+                redraw = true;
             }
-            render_frame(shared_state);
+            if (shared_state->frame > frame) {
+                frame = shared_state->frame;
+                redraw = true;
+            }
+            if (redraw) {
+                render_frame(shared_state);
+                redraw = false;
+            }
         } else {
             switch (event) {
             case HALT_DRAWING:
@@ -111,6 +121,7 @@ static void render_loop(ALLEGRO_THREAD *thread) {
             case RESUME_DRAWING:
                 al_acknowledge_drawing_resume(display);
                 dont_draw = false;
+                redraw = true;
                 break;
             }
             acknowledge_event(STATUS_SUCCESS);

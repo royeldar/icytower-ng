@@ -3,6 +3,7 @@
 #include <stdbool.h>
 
 struct shared_state {
+    unsigned int frame;
     bool fullscreen;
     int scene;
     unsigned int menu_animation_ticks;

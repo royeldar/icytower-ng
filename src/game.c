@@ -41,6 +41,8 @@ ALLEGRO_TIMER *g_timer = NULL;
 
 static bool quit = false;
 
+static unsigned int frame = 0;
+
 bool game_setup() {
     // create an empty event queue
     g_event_queue = al_create_event_queue();
@@ -163,6 +165,7 @@ bool game_setup() {
 
 void update_frame(struct shared_state *shared_state) {
     update_scene(&quit);
+    shared_state->frame = ++frame;
     shared_state->fullscreen = g_fullscreen;
     shared_state->scene = (int)g_scene;
     shared_state->menu_page = (int)g_menu_page;
