@@ -45,7 +45,7 @@ static int render_setup() {
     }
     // create a 640x480 display
     fullscreen = g_fullscreen;
-    al_set_new_display_flags(fullscreen ? ALLEGRO_FULLSCREEN_WINDOW : ALLEGRO_WINDOWED);
+    al_set_new_display_flags(ALLEGRO_OPENGL | (fullscreen ? ALLEGRO_FULLSCREEN_WINDOW : ALLEGRO_WINDOWED));
     display = al_create_display(WIDTH, HEIGHT);
     if (display == NULL) {
         printf("al_create_display() failed\n");
