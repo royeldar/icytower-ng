@@ -170,6 +170,86 @@ static void update_platforms() {
         generate_new_platform();
 }
 
+static bool get_platform(int y, int *platform_y, int *platform_x_left, int *platform_x_right, int *platform_level) {
+    struct platform *platform;
+    unsigned int i = 29 - (y + 1) / 16;
+    if (i >= 32)
+        return false;
+    platform = &g_platforms[i];
+    if (platform->pad == 0) {
+        *platform_y = g_screen_y % 16 + 16 * (29 - i);
+        *platform_x_left = 16 * platform->start - 2;
+        *platform_x_right = 16 * platform->end + 17;
+        *platform_level = platform->level;
+        return true;
+    } else {
+        return false;
+    }
+}
+
+static bool line_intersection(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, int *x, int *y) {
+    int denom = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
+    int num_a = (x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3);
+    int num_b = (x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3);
+    double inv_denom;
+    double u_a, u_b;
+    if (denom == 0)
+        return false;
+    inv_denom = 1.0 / denom;
+    u_a = num_a * inv_denom;
+    u_b = num_b * inv_denom;
+    if (u_a < 0.0 || u_a > 1.0 || u_b < 0.0 || u_b > 1.0)
+        return false;
+    *x = x1 + (int)(u_a * (x2 - x1) + 0.5);
+    *y = y1 + (int)(u_a * (y2 - y1) + 0.5);
+    return true;
+}
+
+static void update_collisions() {
+    int x = g_x;
+    int y = g_y;
+    int platform_y;
+    int platform_x_left, platform_x_right;
+    int platform_level;
+    bool collision_left, collision_right;
+    int collision_x_left, collision_x_right;
+    int collision_y_left, collision_y_right;
+    if (!get_platform(y, &platform_y, &platform_x_left, &platform_x_right, &platform_level) &&
+        !get_platform(prev_y, &platform_y, &platform_x_left, &platform_x_right, &platform_level)) {
+        if (g_jump_state == JUMP_STATE_IDLE || g_jump_state == JUMP_STATE_FLY_DOWN)
+            g_jump_state = JUMP_STATE_FLY_DOWN_2;
+        return;
+    }
+    collision_left = line_intersection(platform_x_left, platform_y, platform_x_right, platform_y,
+        x - 11, y + 1, prev_x - 11, prev_y, &collision_x_left, &collision_y_left);
+    collision_right = line_intersection(platform_x_left, platform_y, platform_x_right, platform_y,
+        x + 11, y + 1, prev_x + 11, prev_y, &collision_x_right, &collision_y_right);
+    if (collision_left != collision_right)
+        g_edge_state = collision_left ? EDGE_STATE_RIGHT : EDGE_STATE_LEFT;
+    else
+        g_edge_state = EDGE_STATE_IDLE;
+    if (collision_left || collision_right) {
+        if (g_jump_state == JUMP_STATE_FLY_DOWN || g_jump_state == JUMP_STATE_FLY_DOWN_2) {
+            if (!collision_left || !collision_right ||
+                (collision_x_left >= -10000 && collision_x_right >= -10000 &&
+                collision_x_left <= 10000 && collision_x_right <= 10000)) {
+                play_sound("step.ogg", true, true, NULL);
+                g_jump_state = JUMP_STATE_IDLE;
+                g_y = platform_y - 1;
+                g_dy = 0.0;
+                if (collision_left)
+                    g_x = collision_x_left + 11;
+                else
+                    g_x = collision_x_right - 11;
+                g_spinning = false;
+            }
+        }
+    } else {
+        if (g_jump_state == JUMP_STATE_IDLE || g_jump_state == JUMP_STATE_FLY_DOWN)
+            g_jump_state = JUMP_STATE_FLY_DOWN_2;
+    }
+}
+
 static void update_death() {
     if (g_y > 540.0 && !g_death) {
         g_death = 1;
@@ -234,6 +314,7 @@ void update_gameplay() {
             update_position();
             update_screen();
             update_platforms();
+            update_collisions();
             update_death();
             update_animations();
             update_pause();
