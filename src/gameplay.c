@@ -452,6 +452,12 @@ static void update_animations() {
     }
 }
 
+static void update_quit() {
+    if (g_death > 250 && is_key_pressed(g_jump_key)) {
+        quit = true;
+    }
+}
+
 static void update_pause() {
     if (is_key_pressed(ALLEGRO_KEY_ESCAPE)) {
         if (g_death) {
@@ -513,6 +519,7 @@ void update_gameplay() {
             update_edge_sfx();
             update_shake();
             update_animations();
+            update_quit();
             update_pause();
         } else {
             update_end();
