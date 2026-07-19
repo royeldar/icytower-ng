@@ -41,6 +41,11 @@ int g_character_animation_frame = 0;
 bool g_pause;
 bool g_escape;
 
+static bool jumped;
+
+static int prev_x;
+static int prev_y;
+
 static bool wait_resume;
 
 /**
@@ -61,9 +66,69 @@ void initialize_gameplay() {
     g_spinning = false;
     g_pause = false;
     g_escape = false;
+    jumped = true;
     wait_resume = false;
     play_music(g_characters[g_character].sfx_bgmusic);
     play_sound(g_characters[g_character].sfx_greeting, false, false, NULL);
+}
+
+static void update_movement() {
+    if (is_key_down(g_left_key)) {
+        if (g_dx > 0.0)
+            g_dx *= 0.7;
+        g_dx -= 0.3;
+    } else if (is_key_down(g_right_key)) {
+        if (g_dx < 0.0)
+            g_dx *= 0.7;
+        g_dx += 0.3;
+    } else {
+        g_dx *= 0.9;
+    }
+    if (is_key_down(g_jump_key) && (g_rejump || !jumped) && (g_jump_state == JUMP_STATE_IDLE)) {
+        jumped = true;
+        g_jump_state = JUMP_STATE_FLY_UP;
+        g_dy = (g_dx < 0.0) ? (2.0 * g_dx) : (-2.0 * g_dx);
+        if (g_dy > -12.2)
+            g_dy = -12.2;
+        if (g_dy < -22.0) {
+            g_spinning = true;
+            g_rotation_angle = 0.0;
+            play_sound(g_characters[g_character].sfx_jumphi, true, true, NULL);
+        } else if (g_dy < -15.0) {
+            play_sound(g_characters[g_character].sfx_jumpmed, true, true, NULL);
+        } else {
+            play_sound(g_characters[g_character].sfx_jumplo, true, true, NULL);
+        }
+    } else if (!is_key_down(g_jump_key)) {
+        jumped = false;
+    }
+}
+
+static void update_position() {
+    prev_x = g_x;
+    prev_y = g_y;
+    if (g_dx > 12.2)
+        g_dx = 12.2;
+    else if (g_dx < -12.2)
+        g_dx = -12.2;
+    if (g_dy > 12.2)
+        g_dy = 12.2;
+    else if (g_dy < -100.0)
+        g_dy = -100.0;
+    g_x += g_dx;
+    g_y += g_dy;
+    if (g_x > 555.0) {
+        g_x = 555.0;
+        g_dx = g_dx * -0.9;
+    } else if (g_x < 85.0) {
+        g_x = 85.0;
+        g_dx = g_dx * -0.9;
+    }
+    if (g_jump_state != JUMP_STATE_IDLE) {
+        g_dy += 0.8;
+        if (g_jump_state == JUMP_STATE_FLY_UP && g_dy > 0.0)
+            g_jump_state = JUMP_STATE_FLY_DOWN;
+    }
 }
 
 static void update_animations() {
@@ -112,6 +177,8 @@ static void update_resume() {
  */
 void update_gameplay() {
     if (!g_pause) {
+        update_movement();
+        update_position();
         update_animations();
         update_pause();
     } else {
