@@ -83,12 +83,14 @@ static void render_frame(const struct shared_state *shared_state) {
     float width = al_get_display_width(display);
     float height = al_get_display_height(display);
     float scale = fminf(width / WIDTH, height / HEIGHT);
+    int offset_x = shared_state->offset_x;
+    int offset_y = shared_state->offset_y;
     al_set_target_bitmap(bitmap);
     draw_scene(shared_state);
     al_set_target_backbuffer(display);
     al_clear_to_color(al_map_rgb(0, 0, 0));
     al_draw_scaled_bitmap(bitmap,
-        0, 0,
+        offset_x, offset_y,
         WIDTH, HEIGHT,
         (width - WIDTH * scale) / 2, (height - HEIGHT * scale) / 2,
         WIDTH * scale, HEIGHT * scale,

@@ -97,6 +97,7 @@ sources = files(
   'render.c',
   'resources.c',
   'scene.c',
+  'screenshake.c',
   'sfx.c',
   'shared_state.c',
   'sound.c',

@@ -25,6 +25,7 @@
 #include "random.h"
 #include "render.h"
 #include "scene.h"
+#include "screenshake.h"
 #include "sfx.h"
 #include "shared_state.h"
 #include "sound_volume.h"
@@ -169,6 +170,8 @@ bool game_setup() {
 void update_frame(struct shared_state *shared_state) {
     update_scene(&quit);
     shared_state->frame = ++frame;
+    shared_state->offset_x = g_offset_x;
+    shared_state->offset_y = g_offset_y;
     shared_state->fullscreen = g_fullscreen;
     shared_state->scene = (int)g_scene;
     shared_state->menu_page = (int)g_menu_page;

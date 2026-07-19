@@ -20,6 +20,7 @@
 #include "music.h"
 #include "random.h"
 #include "scene.h"
+#include "screenshake.h"
 #include "shared_state.h"
 #include "sound.h"
 
@@ -69,6 +70,8 @@ static int death_ticks;
 static bool quit;
 static bool wait_resume;
 
+static int shake_timer;
+
 static int wide_level;
 
 /**
@@ -103,6 +106,7 @@ void initialize_gameplay() {
     death_ticks = 0;
     quit = false;
     wait_resume = false;
+    shake_timer = 0;
     wide_level = 50;
     play_music(g_characters[g_character].sfx_bgmusic);
     play_sound(g_characters[g_character].sfx_greeting, false, false, NULL);
@@ -338,6 +342,7 @@ static void update_crash() {
             death_sfx_playing = false;
         }
         play_sound("splat.ogg", true, false, NULL);
+        shake_timer = 24;
     }
 }
 
@@ -359,6 +364,15 @@ static void update_edge_sfx() {
     if (g_edge_state != EDGE_STATE_IDLE)
         if (++edge_ticks == 50)
             edge_ticks = 0;
+}
+
+static void update_shake() {
+    if (shake_timer) {
+        shake_timer--;
+        g_offset_y = rand_custom() % 8;
+    } else {
+        g_offset_y = 0;
+    }
 }
 
 static void update_animations() {
@@ -426,6 +440,7 @@ void update_gameplay() {
             update_crash();
             update_wide_level();
             update_edge_sfx();
+            update_shake();
             update_animations();
             update_pause();
         } else {

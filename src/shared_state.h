@@ -6,6 +6,7 @@
 
 struct shared_state {
     unsigned int frame;
+    int offset_x, offset_y;
     bool fullscreen;
     int scene;
     unsigned int menu_animation_ticks;
