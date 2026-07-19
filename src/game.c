@@ -187,6 +187,16 @@ void update_frame(struct shared_state *shared_state) {
     shared_state->heroface_animation_frame = g_heroface_animation_frame;
     memcpy(shared_state->platforms, g_platforms, sizeof(g_platforms));
     shared_state->screen_y = g_screen_y;
+    shared_state->x = g_x;
+    shared_state->y = g_y;
+    shared_state->dx = g_dx;
+    shared_state->dy = g_dy;
+    shared_state->jump_state = (int)g_jump_state;
+    shared_state->edge_state = (int)g_edge_state;
+    shared_state->spinning = g_spinning;
+    shared_state->rotation_angle = g_rotation_angle;
+    shared_state->gameplay_animation_ticks = g_gameplay_animation_ticks;
+    shared_state->character_animation_frame = g_character_animation_frame;
 }
 
 void game_loop() {

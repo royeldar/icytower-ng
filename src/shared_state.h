@@ -24,6 +24,14 @@ struct shared_state {
     int start_floor;
     struct platform platforms[32];
     int screen_y;
+    double x, y;
+    double dx, dy;
+    int jump_state;
+    int edge_state;
+    bool spinning;
+    double rotation_angle;
+    unsigned int gameplay_animation_ticks;
+    int character_animation_frame;
 };
 
 void initialize_shared_state(const struct shared_state *shared_state);

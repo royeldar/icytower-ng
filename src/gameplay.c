@@ -3,8 +3,12 @@
  */
 
 #include <allegro5/allegro.h>
+#include <assert.h>
+#include <math.h>
+#include <stdbool.h>
 
 #include "background.h"
+#include "character.h"
 #include "floor.h"
 #include "fonts.h"
 #include "gameplay.h"
@@ -17,6 +21,17 @@ static unsigned int seed;
 
 int g_screen_y;
 
+double g_x, g_y;
+double g_dx, g_dy;
+
+enum jump_state g_jump_state;
+enum edge_state g_edge_state;
+bool g_spinning;
+double g_rotation_angle;
+
+unsigned int g_gameplay_animation_ticks = 0;
+int g_character_animation_frame = 0;
+
 /**
  * @brief Initialize the gameplay scene
  */
@@ -26,13 +41,30 @@ void initialize_gameplay() {
     srand_msvc(seed);
     generate_platforms();
     g_screen_y = 0;
+    g_x = 200.0;
+    g_y = 431.0;
+    g_dx = 0.001;
+    g_dy = 0.0;
+    g_jump_state = JUMP_STATE_IDLE;
+    g_edge_state = EDGE_STATE_IDLE;
+    g_spinning = false;
+}
+
+static void update_animations() {
+    if (++g_gameplay_animation_ticks == 50)
+        g_gameplay_animation_ticks = 0;
+    if (g_gameplay_animation_ticks % 10 == 0)
+        if (++g_character_animation_frame == 4)
+            g_character_animation_frame = 0;
+    if (g_spinning)
+        g_rotation_angle += al_fixtof(8 * al_fixtorad_r);
 }
 
 /**
  * @brief Update the gameplay scene one tick
  */
 void update_gameplay() {
-    // TODO
+    update_animations();
 }
 
 static void draw_background(const struct shared_state *shared_state) {
@@ -97,6 +129,110 @@ static void draw_platforms(const struct shared_state *shared_state) {
     }
 }
 
+static void draw_character(const struct shared_state *shared_state) {
+    int character = shared_state->character;
+    ALLEGRO_BITMAP *character_idle1 = get_gfx_bitmap(g_characters[character].gfx_idle1);
+    ALLEGRO_BITMAP *character_idle2 = get_gfx_bitmap(g_characters[character].gfx_idle2);
+    ALLEGRO_BITMAP *character_idle3 = get_gfx_bitmap(g_characters[character].gfx_idle3);
+    ALLEGRO_BITMAP *character_walk1 = get_gfx_bitmap(g_characters[character].gfx_walk1);
+    ALLEGRO_BITMAP *character_walk2 = get_gfx_bitmap(g_characters[character].gfx_walk2);
+    ALLEGRO_BITMAP *character_walk3 = get_gfx_bitmap(g_characters[character].gfx_walk3);
+    ALLEGRO_BITMAP *character_walk4 = get_gfx_bitmap(g_characters[character].gfx_walk4);
+    ALLEGRO_BITMAP *character_jump1 = get_gfx_bitmap(g_characters[character].gfx_jump1);
+    ALLEGRO_BITMAP *character_jump2 = get_gfx_bitmap(g_characters[character].gfx_jump2);
+    ALLEGRO_BITMAP *character_jump3 = get_gfx_bitmap(g_characters[character].gfx_jump3);
+    ALLEGRO_BITMAP *character_jump = get_gfx_bitmap(g_characters[character].gfx_jump);
+    ALLEGRO_BITMAP *character_chock = get_gfx_bitmap(g_characters[character].gfx_chock);
+    ALLEGRO_BITMAP *character_rotate = get_gfx_bitmap(g_characters[character].gfx_rotate);
+    ALLEGRO_BITMAP *character_edge1 = get_gfx_bitmap(g_characters[character].gfx_edge1);
+    ALLEGRO_BITMAP *character_edge2 = get_gfx_bitmap(g_characters[character].gfx_edge2);
+    int screen_y = shared_state->screen_y;
+    int x = shared_state->x;
+    int y = shared_state->y;
+    double dx = shared_state->dx;
+    double dy = shared_state->dy;
+    enum jump_state jump_state = shared_state->jump_state;
+    enum edge_state edge_state = shared_state->edge_state;
+    bool spinning = shared_state->spinning;
+    double rotation_angle = shared_state->rotation_angle;
+    unsigned int gameplay_animation_ticks = shared_state->gameplay_animation_ticks;
+    int character_animation_frame = shared_state->character_animation_frame;
+    ALLEGRO_BITMAP *character_bitmap = NULL;
+    if (jump_state == JUMP_STATE_IDLE) {
+        if (fabs(dx) < 0.02) {
+            if (edge_state == EDGE_STATE_IDLE) {
+                if (screen_y <= 200 || y <= 400.0) {
+                    if (gameplay_animation_ticks <= 11)
+                        character_bitmap = character_idle2;
+                    else if (gameplay_animation_ticks <= 24)
+                        character_bitmap = character_idle1;
+                    else if (gameplay_animation_ticks <= 36)
+                        character_bitmap = character_idle3;
+                    else
+                        character_bitmap = character_idle1;
+                } else {
+                    character_bitmap = character_chock;
+                }
+                if (dx > 0.0)
+                    al_draw_bitmap(character_bitmap, x - 14, y - 51, 0);
+                else
+                    al_draw_bitmap(character_bitmap, x - 14, y - 51, ALLEGRO_FLIP_HORIZONTAL);
+            } else if (edge_state == EDGE_STATE_LEFT) {
+                if ((gameplay_animation_ticks & 8) == 0)
+                    character_bitmap = character_edge1;
+                else
+                    character_bitmap = character_edge2;
+                al_draw_bitmap(character_bitmap, x - 26, y - 50, ALLEGRO_FLIP_HORIZONTAL);
+            } else if (edge_state == EDGE_STATE_RIGHT) {
+                if ((gameplay_animation_ticks & 8) == 0)
+                    character_bitmap = character_edge1;
+                else
+                    character_bitmap = character_edge2;
+                al_draw_bitmap(character_bitmap, x - 11, y - 50, 0);
+            }
+        } else {
+            if (fabs(dx) < 0.2)
+                character_animation_frame = 0;
+            switch (character_animation_frame) {
+            case 0:
+                character_bitmap = character_walk1;
+                break;
+            case 1:
+                character_bitmap = character_walk2;
+                break;
+            case 2:
+                character_bitmap = character_walk3;
+                break;
+            case 3:
+                character_bitmap = character_walk4;
+                break;
+            }
+            assert(character_bitmap != NULL);
+            if (dx > 0.0)
+                al_draw_bitmap(character_bitmap, x - 14, y - 51, 0);
+            else
+                al_draw_bitmap(character_bitmap, x - 14, y - 51, ALLEGRO_FLIP_HORIZONTAL);
+        }
+    } else if (spinning) {
+        float w = al_get_bitmap_width(character_rotate);
+        float h = al_get_bitmap_height(character_rotate);
+        al_draw_rotated_bitmap(character_rotate, w / 2, h / 2, x - 14 + w / 2, y - 51 + h / 2, rotation_angle, 0);
+    } else {
+        if (fabs(dx) < 0.01)
+            character_bitmap = character_jump;
+        else if (jump_state == JUMP_STATE_FLY_UP && dy < -3.0)
+            character_bitmap = character_jump1;
+        else if ((jump_state == JUMP_STATE_FLY_DOWN || jump_state == JUMP_STATE_FLY_DOWN_2) && dy > 3.0)
+            character_bitmap = character_jump3;
+        else
+            character_bitmap = character_jump2;
+        if (dx > 0.0)
+            al_draw_bitmap(character_bitmap, x - 14, y - 51, 0);
+        else
+            al_draw_bitmap(character_bitmap, x - 14, y - 51, ALLEGRO_FLIP_HORIZONTAL);
+    }
+}
+
 static void draw_walls(const struct shared_state *shared_state) {
     ALLEGRO_BITMAP *sideblock = get_gfx_bitmap("sideblock.bmp");
     int screen_y = shared_state->screen_y;
@@ -113,5 +249,6 @@ static void draw_walls(const struct shared_state *shared_state) {
 void draw_gameplay(const struct shared_state *shared_state) {
     draw_background(shared_state);
     draw_platforms(shared_state);
+    draw_character(shared_state);
     draw_walls(shared_state);
 }
