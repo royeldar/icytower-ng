@@ -43,6 +43,16 @@ int g_death;
 bool g_pause;
 bool g_escape;
 
+int g_combo_timer;
+int g_combo_current;
+int g_combo_score;
+int g_combo_last;
+int g_combo_best;
+
+int g_reward_timer;
+
+int g_last_level;
+
 static unsigned int edge_ticks = 0;
 
 static bool jumped;
@@ -50,6 +60,8 @@ static bool jumped;
 static int prev_x;
 static int prev_y;
 static int prev_screen_y;
+
+static int jump_streak;
 
 static bool quit;
 static bool wait_resume;
@@ -73,7 +85,15 @@ void initialize_gameplay() {
     g_death = 0;
     g_pause = false;
     g_escape = false;
+    g_combo_timer = 0;
+    g_combo_current = 0;
+    g_combo_score = 0;
+    g_combo_last = 0;
+    g_combo_best = 0;
+    g_reward_timer = 0;
+    g_last_level = 0;
     jumped = true;
+    jump_streak = 0;
     quit = false;
     wait_resume = false;
     play_music(g_characters[g_character].sfx_bgmusic);
@@ -189,6 +209,15 @@ static bool get_platform(int y, int *platform_y, int *platform_x_left, int *plat
     }
 }
 
+static int get_level(int y) {
+    struct platform *platform;
+    unsigned int i = 29 - (y + 1) / 16;
+    if (i >= 32)
+        return 0;
+    platform = &g_platforms[i];
+    return platform->level;
+}
+
 static bool line_intersection(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, int *x, int *y) {
     int denom = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
     int num_a = (x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3);
@@ -252,8 +281,39 @@ static void update_collisions() {
     }
 }
 
+static void update_score() {
+    if (g_combo_timer != 0) {
+        g_combo_timer--;
+        if (g_combo_timer == 0 && jump_streak >= 2) {
+            g_combo_score += g_combo_current * g_combo_current;
+            g_combo_last = g_combo_current;
+            if (g_combo_current > g_combo_best)
+                g_combo_best = g_combo_current;
+            g_reward_timer = 80;
+        }
+    }
+    if (g_jump_state == JUMP_STATE_IDLE) {
+        int level = get_level(g_y);
+        if (level >= g_last_level + 2) {
+            if (g_combo_timer) {
+                g_combo_current += level - g_last_level;
+                jump_streak++;
+            } else {
+                g_combo_current = level - g_last_level;
+                jump_streak = 1;
+            }
+            g_combo_timer = 100;
+        } else if (level != g_last_level) {
+            if (g_combo_timer != 0)
+                g_combo_timer = 1;
+        }
+        g_last_level = level;
+    }
+}
+
 static void update_death() {
     if (g_y > 540.0 && !g_death) {
+        g_combo_timer = 0;
         g_death = 1;
         play_sound(g_characters[g_character].sfx_death, true, false, NULL);
     }
@@ -279,6 +339,8 @@ static void update_animations() {
         g_rotation_angle += al_fixtof(8 * al_fixtorad_r);
     if (g_death && g_death < 300)
         g_death += 8;
+    if (g_reward_timer != 0)
+        g_reward_timer--;
 }
 
 static void update_pause() {
@@ -327,6 +389,7 @@ void update_gameplay() {
             update_screen();
             update_platforms();
             update_collisions();
+            update_score();
             update_death();
             update_edge_sfx();
             update_animations();
@@ -515,6 +578,32 @@ static void draw_walls(const struct shared_state *shared_state) {
     }
 }
 
+static void draw_combo(const struct shared_state *shared_state) {
+    ALLEGRO_BITMAP *combo_meter = get_gfx_bitmap("combo_meter.bmp");
+    ALLEGRO_BITMAP *combo_liquid = get_gfx_bitmap("combo_liquid.bmp");
+    ALLEGRO_BITMAP *combo_count = get_gfx_bitmap("combo_count.bmp");
+    int combo_timer = shared_state->combo_timer;
+    int combo_current = shared_state->combo_current;
+    int combo_last = shared_state->combo_last;
+    al_draw_bitmap(combo_meter, 20, 100, 0);
+    if (combo_timer != 0) {
+        al_draw_bitmap_region(combo_liquid, 0, 100 - combo_timer, 16, combo_timer, 31, 219 - combo_timer, 0);
+        al_draw_bitmap(combo_count, -10, 210, 0);
+        al_draw_textf(g_font1, al_map_rgb(255, 255, 255), 40, 214, ALLEGRO_ALIGN_CENTER, "%d", combo_current);
+    } else if (g_reward_timer != 0) {
+        al_draw_bitmap(combo_count, -10, 210, 0);
+        al_draw_textf(g_font1, al_map_rgb(255, 255, 255), 40, 214, ALLEGRO_ALIGN_CENTER, "%d", combo_last);
+    }
+}
+
+static void draw_score(const struct shared_state *shared_state) {
+    int combo_score = shared_state->combo_score;
+    int last_level = shared_state->last_level;
+    al_draw_textf(g_font1, al_map_rgb(255, 255, 255),
+        8, 440, ALLEGRO_ALIGN_LEFT,
+        "score: %d", combo_score + 10 * last_level);
+}
+
 static void draw_pause(const struct shared_state *shared_state) {
     bool pause = shared_state->pause;
     bool escape = shared_state->escape;
@@ -555,5 +644,7 @@ void draw_gameplay(const struct shared_state *shared_state) {
     draw_platforms(shared_state);
     draw_character(shared_state);
     draw_walls(shared_state);
+    draw_combo(shared_state);
+    draw_score(shared_state);
     draw_pause(shared_state);
 }

@@ -200,6 +200,13 @@ void update_frame(struct shared_state *shared_state) {
     shared_state->death = g_death;
     shared_state->pause = g_pause;
     shared_state->escape = g_escape;
+    shared_state->combo_timer = g_combo_timer;
+    shared_state->combo_current = g_combo_current;
+    shared_state->combo_score = g_combo_score;
+    shared_state->combo_last = g_combo_last;
+    shared_state->combo_best = g_combo_best;
+    shared_state->reward_timer = g_reward_timer;
+    shared_state->last_level = g_last_level;
 }
 
 void game_loop() {

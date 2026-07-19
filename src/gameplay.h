@@ -29,6 +29,13 @@ extern int g_character_animation_frame;
 extern int g_death;
 extern bool g_pause;
 extern bool g_escape;
+extern int g_combo_timer;
+extern int g_combo_current;
+extern int g_combo_score;
+extern int g_combo_last;
+extern int g_combo_best;
+extern int g_reward_timer;
+extern int g_last_level;
 
 void initialize_gameplay();
 void update_gameplay();

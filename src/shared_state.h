@@ -35,6 +35,13 @@ struct shared_state {
     int death;
     bool pause;
     bool escape;
+    int combo_timer;
+    int combo_current;
+    int combo_score;
+    int combo_last;
+    int combo_best;
+    int reward_timer;
+    int last_level;
 };
 
 void initialize_shared_state(const struct shared_state *shared_state);
