@@ -67,6 +67,7 @@ static int jump_streak;
 static ALLEGRO_SAMPLE_ID death_sfx_sample;
 static bool death_sfx_playing;
 static int death_ticks;
+static bool gameover_sfx;
 static bool quit;
 static bool wait_resume;
 
@@ -104,6 +105,7 @@ void initialize_gameplay() {
     jump_streak = 0;
     death_sfx_playing = false;
     death_ticks = 0;
+    gameover_sfx = false;
     quit = false;
     wait_resume = false;
     shake_timer = 0;
@@ -329,6 +331,10 @@ static void update_death() {
         g_death = 1;
         death_sfx_playing = play_sound(g_characters[g_character].sfx_death, true, false, &death_sfx_sample);
         death_ticks = 1;
+    }
+    if (g_y > 900.0 && !gameover_sfx) {
+        gameover_sfx = true;
+        play_sound("gameover.ogg", false, false, NULL);
     }
 }
 
@@ -645,6 +651,36 @@ static void draw_combo(const struct shared_state *shared_state) {
     }
 }
 
+static void draw_gameover(const struct shared_state *shared_state) {
+    ALLEGRO_BITMAP *gameover = get_gfx_bitmap("gameover.bmp");
+    int death = shared_state->death;
+    if (death) {
+        int combo_score = shared_state->combo_score;
+        int last_level = shared_state->last_level;
+        int combo_best = shared_state->combo_best;
+        int width = al_get_bitmap_width(gameover);
+        al_draw_bitmap(gameover, 320 - width / 2, 480 - death, 0);
+        al_draw_text(g_font1, al_map_rgb(255, 255, 255),
+            140, 580 - death, ALLEGRO_ALIGN_LEFT,
+            "Score:");
+        al_draw_text(g_font1, al_map_rgb(255, 255, 255),
+            140, 620 - death, ALLEGRO_ALIGN_LEFT,
+            "Level:");
+        al_draw_text(g_font1, al_map_rgb(255, 255, 255),
+            140, 660 - death, ALLEGRO_ALIGN_LEFT,
+            "Best combo:");
+        al_draw_textf(g_font1, al_map_rgb(255, 255, 255),
+            500, 580 - death, ALLEGRO_ALIGN_RIGHT,
+            "%d", combo_score + 10 * last_level);
+        al_draw_textf(g_font1, al_map_rgb(255, 255, 255),
+            500, 620 - death, ALLEGRO_ALIGN_RIGHT,
+            "%d", last_level);
+        al_draw_textf(g_font1, al_map_rgb(255, 255, 255),
+            500, 660 - death, ALLEGRO_ALIGN_RIGHT,
+            "%d", combo_best);
+    }
+}
+
 static void draw_score(const struct shared_state *shared_state) {
     int combo_score = shared_state->combo_score;
     int last_level = shared_state->last_level;
@@ -694,6 +730,7 @@ void draw_gameplay(const struct shared_state *shared_state) {
     draw_character(shared_state);
     draw_walls(shared_state);
     draw_combo(shared_state);
+    draw_gameover(shared_state);
     draw_score(shared_state);
     draw_pause(shared_state);
 }
