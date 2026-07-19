@@ -8,6 +8,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+#include "background.h"
 #include "events.h"
 #include "fonts.h"
 #include "fullscreen.h"
@@ -70,6 +71,11 @@ static int render_setup() {
         printf("create_fonts() failed\n");
         return STATUS_FAILURE;
     }
+    // create background texture
+    if (!create_background_bitmap()) {
+        printf("create_background_bitmap() failed\n");
+        return STATUS_FAILURE;
+    }
     return STATUS_SUCCESS;
 }
 
@@ -130,6 +136,8 @@ static void render_loop(ALLEGRO_THREAD *thread) {
 }
 
 static void render_cleanup() {
+    // destroy background texture
+    destroy_background_bitmap();
     // destroy fonts
     destroy_fonts();
     // destroy bitmaps

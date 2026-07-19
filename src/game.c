@@ -16,6 +16,7 @@
 #include "floor.h"
 #include "fullscreen.h"
 #include "game.h"
+#include "gameplay.h"
 #include "keyboard.h"
 #include "menu.h"
 #include "music_volume.h"
@@ -182,6 +183,7 @@ void update_frame(struct shared_state *shared_state) {
     shared_state->start_floor = g_start_floor;
     shared_state->menu_animation_ticks = g_menu_animation_ticks;
     shared_state->heroface_animation_frame = g_heroface_animation_frame;
+    shared_state->screen_y = g_screen_y;
 }
 
 void game_loop() {

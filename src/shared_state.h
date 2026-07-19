@@ -20,6 +20,7 @@ struct shared_state {
     bool rejump;
     int character;
     int start_floor;
+    int screen_y;
 };
 
 void initialize_shared_state(const struct shared_state *shared_state);
