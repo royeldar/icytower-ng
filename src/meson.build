@@ -81,6 +81,7 @@ sources = files(
   'fonts.c',
   'fullscreen.c',
   'game.c',
+  'gameplay.c',
   'gfx.c',
   'hashmap.c',
   'instructions.c',

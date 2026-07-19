@@ -6,6 +6,7 @@
 
 enum scene {
     MENU_SCENE,
+    GAMEPLAY_SCENE,
     INSTRUCTIONS_SCENE,
     REBIND_SCENE,
     EXIT_SCENE,

@@ -113,7 +113,9 @@ static void update_menu_page() {
         }
     } else if (select) {
         if ((g_menu_page == MAIN_PAGE) && (g_menu_item == 0)) {
-            // TODO gameplay
+            play_sound("menu_change.ogg");
+            stop_music();
+            g_scene = GAMEPLAY_SCENE;
         } else if ((g_menu_page == MAIN_PAGE) && (g_menu_item == 1)) {
             // TODO replay
         } else if ((g_menu_page == MAIN_PAGE) && (g_menu_item == 2)) {
