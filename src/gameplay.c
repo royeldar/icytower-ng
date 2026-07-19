@@ -63,6 +63,9 @@ static int prev_screen_y;
 
 static int jump_streak;
 
+static ALLEGRO_SAMPLE_ID death_sfx_sample;
+static bool death_sfx_playing;
+static int death_ticks;
 static bool quit;
 static bool wait_resume;
 
@@ -96,6 +99,8 @@ void initialize_gameplay() {
     g_last_level = 0;
     jumped = true;
     jump_streak = 0;
+    death_sfx_playing = false;
+    death_ticks = 0;
     quit = false;
     wait_resume = false;
     wide_level = 50;
@@ -318,7 +323,21 @@ static void update_death() {
     if (g_y > 540.0 && !g_death) {
         g_combo_timer = 0;
         g_death = 1;
-        play_sound(g_characters[g_character].sfx_death, true, false, NULL);
+        death_sfx_playing = play_sound(g_characters[g_character].sfx_death, true, false, &death_sfx_sample);
+        death_ticks = 1;
+    }
+}
+
+static void update_crash() {
+    if (death_ticks != 0)
+        death_ticks++;
+    if (death_ticks > 250 || death_ticks > 5 * g_last_level) {
+        death_ticks = 0;
+        if (death_sfx_playing) {
+            al_stop_sample(&death_sfx_sample);
+            death_sfx_playing = false;
+        }
+        play_sound("splat.ogg", true, false, NULL);
     }
 }
 
@@ -404,6 +423,7 @@ void update_gameplay() {
             update_collisions();
             update_score();
             update_death();
+            update_crash();
             update_wide_level();
             update_edge_sfx();
             update_animations();
