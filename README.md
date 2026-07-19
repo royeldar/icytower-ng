@@ -8,12 +8,22 @@ This is an open source remake of Icy Tower 1.3.1 using Allegro 5.
 
 First, one need to extract the assets from the original game.
 
-Download and install Icy Tower 1.3.1, then put the following files in `assets/`:
+Download the installer of the original game:
+* **URL**: [icytower131_install.exe](https://archive.org/download/Icy_Tower/icytower13.rar/icytower13_install.exe)
+* **SHA-1**: `a00aa6ebc4c37fac7c44de91671477ef7e32389a`
+
+Install it, then put the following files in `assets/`:
 
 - `data.dat` (found in `<installation directory>/data/data.dat`)
 - `sfx13.dat` (found in `<installation directory>/data/sfx13.dat`)
 - `harold.dat` (found in `<installation directory>/characters/harold_the_homeboy/harold.dat`)
 - `dave.dat` (found in `<installation directory>/characters/disco_dave/dave.dat`)
+
+Alternatively, you can extract these files without needing to install; simply run
+
+```sh
+innoextract -I data.dat -I sfx13.dat -I harold.dat -I dave.dat icytower131_install.exe
+```
 
 Then run
 
