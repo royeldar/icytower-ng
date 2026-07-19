@@ -17,6 +17,7 @@
 #include "floor.h"
 #include "fullscreen.h"
 #include "game.h"
+#include "gameover.h"
 #include "gameplay.h"
 #include "keyboard.h"
 #include "level.h"
@@ -215,6 +216,7 @@ void update_frame(struct shared_state *shared_state) {
     shared_state->reward_timer = g_reward_timer;
     shared_state->reward_size = g_reward_size;
     shared_state->last_level = g_last_level;
+    shared_state->gameover_item = g_gameover_item;
 }
 
 void game_loop() {

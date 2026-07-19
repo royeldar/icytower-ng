@@ -48,6 +48,7 @@ struct shared_state {
     int reward_timer;
     int reward_size;
     int last_level;
+    int gameover_item;
 };
 
 void initialize_shared_state(const struct shared_state *shared_state);

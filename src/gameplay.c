@@ -487,6 +487,12 @@ static void update_resume() {
     }
 }
 
+static void update_end() {
+    stop_music();
+    g_offset_y = 0;
+    g_scene = GAMEOVER_SCENE;
+}
+
 /**
  * @brief Update the gameplay scene one tick
  */
@@ -509,7 +515,7 @@ void update_gameplay() {
             update_animations();
             update_pause();
         } else {
-            // TODO
+            update_end();
         }
     } else {
         update_resume();
