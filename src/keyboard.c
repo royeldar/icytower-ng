@@ -13,6 +13,7 @@
 #define KEY_RELEASED    (1 << 2)
 
 static char keys[ALLEGRO_KEY_MAX];
+static char any;
 
 bool is_key_down(int keycode) {
     assert(keycode >= 0 && keycode < ALLEGRO_KEY_MAX);
@@ -24,9 +25,17 @@ bool is_key_pressed(int keycode) {
     return keys[keycode] & KEY_PRESSED;
 }
 
+bool is_any_key_pressed() {
+    return any & KEY_PRESSED;
+}
+
 bool is_key_released(int keycode) {
     assert(keycode >= 0 && keycode < ALLEGRO_KEY_MAX);
     return keys[keycode] & KEY_RELEASED;
+}
+
+bool is_any_key_released() {
+    return any & KEY_RELEASED;
 }
 
 void handle_keyboard_event(const ALLEGRO_KEYBOARD_EVENT *event) {
@@ -35,9 +44,11 @@ void handle_keyboard_event(const ALLEGRO_KEYBOARD_EVENT *event) {
     switch (event->type) {
     case ALLEGRO_EVENT_KEY_DOWN:
         keys[keycode] = KEY_DOWN | KEY_PRESSED;
+        any |= KEY_PRESSED;
         break;
     case ALLEGRO_EVENT_KEY_UP:
         keys[keycode] = KEY_RELEASED;
+        any |= KEY_RELEASED;
         break;
     }
 }
@@ -46,8 +57,10 @@ void do_keyboard_tick() {
     int keycode;
     for (keycode = 0; keycode < ALLEGRO_KEY_MAX; keycode++)
         keys[keycode] &= KEY_DOWN;
+    any = 0;
 }
 
 void clear_keyboard_state() {
     memset(keys, 0, sizeof(keys));
+    any = 0;
 }
