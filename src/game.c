@@ -208,7 +208,9 @@ void update_frame(struct shared_state *shared_state) {
     shared_state->combo_score = g_combo_score;
     shared_state->combo_last = g_combo_last;
     shared_state->combo_best = g_combo_best;
+    shared_state->reward_gfx = g_reward_gfx;
     shared_state->reward_timer = g_reward_timer;
+    shared_state->reward_size = g_reward_size;
     shared_state->last_level = g_last_level;
 }
 

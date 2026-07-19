@@ -34,7 +34,9 @@ extern int g_combo_current;
 extern int g_combo_score;
 extern int g_combo_last;
 extern int g_combo_best;
+extern const char *g_reward_gfx;
 extern int g_reward_timer;
+extern int g_reward_size;
 extern int g_last_level;
 
 void initialize_gameplay();

@@ -11,6 +11,7 @@
 #include "background.h"
 #include "character.h"
 #include "controls.h"
+#include "eye_candy.h"
 #include "floor.h"
 #include "fonts.h"
 #include "gameplay.h"
@@ -19,6 +20,7 @@
 #include "level.h"
 #include "music.h"
 #include "random.h"
+#include "reward.h"
 #include "scene.h"
 #include "screenshake.h"
 #include "shared_state.h"
@@ -50,7 +52,9 @@ int g_combo_score;
 int g_combo_last;
 int g_combo_best;
 
+const char *g_reward_gfx;
 int g_reward_timer;
+int g_reward_size;
 
 int g_last_level;
 
@@ -296,6 +300,7 @@ static void update_collisions() {
 }
 
 static void update_score() {
+    struct reward *reward = NULL;
     if (g_combo_timer != 0) {
         g_combo_timer--;
         if (g_combo_timer == 0 && jump_streak >= 2) {
@@ -303,7 +308,11 @@ static void update_score() {
             g_combo_last = g_combo_current;
             if (g_combo_current > g_combo_best)
                 g_combo_best = g_combo_current;
+            reward = get_reward(g_combo_current);
+            g_reward_gfx = reward->gfx;
             g_reward_timer = 80;
+            g_reward_size = 0;
+            play_sound(reward->sfx, false, false, NULL);
         }
     }
     if (g_jump_state == JUMP_STATE_IDLE) {
@@ -391,8 +400,13 @@ static void update_animations() {
         g_rotation_angle += al_fixtof(8 * al_fixtorad_r);
     if (g_death && g_death < 300)
         g_death += 8;
-    if (g_reward_timer != 0)
+    if (g_reward_timer != 0) {
+        if (g_reward_timer > 60)
+            g_reward_size += 3277;
+        else if (g_reward_timer <= 9)
+            g_reward_size -= 6554;
         g_reward_timer--;
+    }
 }
 
 static void update_pause() {
@@ -651,6 +665,36 @@ static void draw_combo(const struct shared_state *shared_state) {
     }
 }
 
+static void draw_reward(const struct shared_state *shared_state) {
+    int reward_timer = shared_state->reward_timer;
+    if (reward_timer != 0) {
+        const char *reward_gfx = shared_state->reward_gfx;
+        int reward_size = shared_state->reward_size;
+        int eye_candy = shared_state->eye_candy;
+        ALLEGRO_BITMAP *reward;
+        float width, height;
+        double scale = reward_size / 65536.0;
+        assert(reward_gfx != NULL);
+        reward = get_gfx_bitmap(reward_gfx);
+        width = al_get_bitmap_width(reward);
+        height = al_get_bitmap_height(reward);
+        if (eye_candy == 1)
+            al_draw_scaled_bitmap(reward, 0, 0, width, height,
+                320 - (scale / 2) * width,
+                360 - scale * height,
+                scale * width,
+                scale * height,
+                0);
+        else if (eye_candy == 2)
+            al_draw_scaled_rotated_bitmap(reward, width / 2, height / 2,
+                320,
+                360 + scale * (height - 120.0),
+                scale, scale,
+                al_fixtof(al_fixmul(al_ftofix(scale * 256), al_fixtorad_r)),
+                0);
+    }
+}
+
 static void draw_gameover(const struct shared_state *shared_state) {
     ALLEGRO_BITMAP *gameover = get_gfx_bitmap("gameover.bmp");
     int death = shared_state->death;
@@ -730,6 +774,7 @@ void draw_gameplay(const struct shared_state *shared_state) {
     draw_character(shared_state);
     draw_walls(shared_state);
     draw_combo(shared_state);
+    draw_reward(shared_state);
     draw_gameover(shared_state);
     draw_score(shared_state);
     draw_pause(shared_state);
