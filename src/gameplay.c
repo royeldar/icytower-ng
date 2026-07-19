@@ -43,6 +43,8 @@ int g_death;
 bool g_pause;
 bool g_escape;
 
+static unsigned int edge_ticks = 0;
+
 static bool jumped;
 
 static int prev_x;
@@ -257,6 +259,16 @@ static void update_death() {
     }
 }
 
+static void update_edge_sfx() {
+    if (g_edge_state == EDGE_STATE_IDLE)
+        edge_ticks = 0;
+    if (g_jump_state == JUMP_STATE_IDLE && edge_ticks == 11)
+        play_sound(g_characters[g_character].sfx_edge, true, true, NULL);
+    if (g_edge_state != EDGE_STATE_IDLE)
+        if (++edge_ticks == 50)
+            edge_ticks = 0;
+}
+
 static void update_animations() {
     if (++g_gameplay_animation_ticks == 50)
         g_gameplay_animation_ticks = 0;
@@ -316,6 +328,7 @@ void update_gameplay() {
             update_platforms();
             update_collisions();
             update_death();
+            update_edge_sfx();
             update_animations();
             update_pause();
         } else {
