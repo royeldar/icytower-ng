@@ -47,6 +47,7 @@ static bool jumped;
 
 static int prev_x;
 static int prev_y;
+static int prev_screen_y;
 
 static bool quit;
 static bool wait_resume;
@@ -136,6 +137,34 @@ static void update_position() {
     }
 }
 
+static void update_screen() {
+    int screen_dy;
+    prev_screen_y = g_screen_y;
+    if (g_y < 0.0)
+        screen_dy = 13;
+    else if (g_y < 20.0)
+        screen_dy = 10;
+    else if (g_y < 40.0)
+        screen_dy = 8;
+    else if (g_y < 60.0)
+        screen_dy = 6;
+    else if (g_y < 80.0)
+        screen_dy = 5;
+    else if (g_y < 100.0)
+        screen_dy = 4;
+    else if (g_y < 120.0)
+        screen_dy = 3;
+    else if (g_y < 140.0)
+        screen_dy = 2;
+    else if (g_y < 160.0)
+        screen_dy = 1;
+    else
+        screen_dy = 0;
+    g_screen_y += screen_dy;
+    g_y += screen_dy;
+    prev_y += screen_dy;
+}
+
 static void update_death() {
     if (g_y > 540.0 && !g_death) {
         g_death = 1;
@@ -198,6 +227,7 @@ void update_gameplay() {
         if (!quit) {
             update_movement();
             update_position();
+            update_screen();
             update_death();
             update_animations();
             update_pause();
