@@ -197,6 +197,8 @@ void update_frame(struct shared_state *shared_state) {
     shared_state->rotation_angle = g_rotation_angle;
     shared_state->gameplay_animation_ticks = g_gameplay_animation_ticks;
     shared_state->character_animation_frame = g_character_animation_frame;
+    shared_state->pause = g_pause;
+    shared_state->escape = g_escape;
 }
 
 void game_loop() {

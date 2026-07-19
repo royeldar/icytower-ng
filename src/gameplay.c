@@ -3,19 +3,23 @@
  */
 
 #include <allegro5/allegro.h>
+#include <allegro5/allegro_primitives.h>
 #include <assert.h>
 #include <math.h>
 #include <stdbool.h>
 
 #include "background.h"
 #include "character.h"
+#include "controls.h"
 #include "floor.h"
 #include "fonts.h"
 #include "gameplay.h"
 #include "gfx.h"
+#include "keyboard.h"
 #include "level.h"
 #include "music.h"
 #include "random.h"
+#include "scene.h"
 #include "shared_state.h"
 #include "sound.h"
 
@@ -34,6 +38,11 @@ double g_rotation_angle;
 unsigned int g_gameplay_animation_ticks = 0;
 int g_character_animation_frame = 0;
 
+bool g_pause;
+bool g_escape;
+
+static bool wait_resume;
+
 /**
  * @brief Initialize the gameplay scene
  */
@@ -50,6 +59,9 @@ void initialize_gameplay() {
     g_jump_state = JUMP_STATE_IDLE;
     g_edge_state = EDGE_STATE_IDLE;
     g_spinning = false;
+    g_pause = false;
+    g_escape = false;
+    wait_resume = false;
     play_music(g_characters[g_character].sfx_bgmusic);
     play_sound(g_characters[g_character].sfx_greeting, false, false, NULL);
 }
@@ -64,11 +76,47 @@ static void update_animations() {
         g_rotation_angle += al_fixtof(8 * al_fixtorad_r);
 }
 
+static void update_pause() {
+    if (is_key_pressed(ALLEGRO_KEY_ESCAPE)) {
+        g_pause = true;
+        g_escape = true;
+        play_sound(g_characters[g_character].sfx_pause, true, false, NULL);
+    } else if (is_key_pressed(g_pause_key)) {
+        g_pause = true;
+        g_escape = false;
+        play_sound(g_characters[g_character].sfx_pause, true, false, NULL);
+    }
+}
+
+static void update_resume() {
+    if (wait_resume) {
+        if (is_key_released(g_pause_key)) {
+            g_pause = false;
+            g_escape = false;
+            wait_resume = false;
+        }
+    } else if (is_key_pressed(g_pause_key)) {
+        wait_resume = true;
+    } else if (g_escape && is_key_pressed(ALLEGRO_KEY_ESCAPE)) {
+        stop_music();
+        play_sound("tryagain.ogg", false, false, NULL);
+        g_scene = MENU_SCENE;
+    } else if (is_any_key_pressed()) {
+        g_pause = false;
+        g_escape = false;
+    }
+}
+
 /**
  * @brief Update the gameplay scene one tick
  */
 void update_gameplay() {
-    update_animations();
+    if (!g_pause) {
+        update_animations();
+        update_pause();
+    } else {
+        update_resume();
+    }
 }
 
 static void draw_background(const struct shared_state *shared_state) {
@@ -247,6 +295,38 @@ static void draw_walls(const struct shared_state *shared_state) {
     }
 }
 
+static void draw_pause(const struct shared_state *shared_state) {
+    bool pause = shared_state->pause;
+    bool escape = shared_state->escape;
+    if (pause) {
+        unsigned int x, y;
+        for (x = 0; x < 640; x += 2) {
+            al_draw_line(x, 0, x, 480, al_map_rgb(0, 0, 0), 0);
+        }
+        for (y = 0; y < 480; y += 2) {
+            al_draw_line(0, y, 640, y, al_map_rgb(0, 0, 0), 0);
+        }
+        if (escape) {
+            al_draw_text(g_font1, al_map_rgb(255, 255, 255),
+                320, 160, ALLEGRO_ALIGN_CENTER,
+                "DO YOU REALLY WANT TO EXIT?");
+            al_draw_text(g_font2, al_map_rgb(255, 255, 255),
+                320, 210, ALLEGRO_ALIGN_CENTER,
+                "Press any key to resume");
+            al_draw_text(g_font2, al_map_rgb(255, 255, 255),
+                320, 240, ALLEGRO_ALIGN_CENTER,
+                "Press ESC to exit");
+        } else {
+            al_draw_text(g_font1, al_map_rgb(255, 255, 255),
+                320, 160, ALLEGRO_ALIGN_CENTER,
+                "Game Paused");
+            al_draw_text(g_font2, al_map_rgb(255, 255, 255),
+                320, 210, ALLEGRO_ALIGN_CENTER,
+                "Press any key to resume");
+        }
+    }
+}
+
 /**
  * @brief Draw the gameplay scene
  */
@@ -255,4 +335,5 @@ void draw_gameplay(const struct shared_state *shared_state) {
     draw_platforms(shared_state);
     draw_character(shared_state);
     draw_walls(shared_state);
+    draw_pause(shared_state);
 }

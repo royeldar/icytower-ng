@@ -32,6 +32,8 @@ struct shared_state {
     double rotation_angle;
     unsigned int gameplay_animation_ticks;
     int character_animation_frame;
+    bool pause;
+    bool escape;
 };
 
 void initialize_shared_state(const struct shared_state *shared_state);
