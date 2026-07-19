@@ -8,6 +8,7 @@ struct floor {
     const char *left;
     const char *mid;
     const char *right;
+    const char *sign;
 };
 
 extern int g_start_floor;

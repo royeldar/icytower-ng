@@ -21,56 +21,67 @@ struct floor g_floors[] = {
         .left = "floor01.bmp",
         .mid = "floor02.bmp",
         .right = "floor03.bmp",
+        .sign = "sign01.bmp",
     },
     {
         .left = "floor04.bmp",
         .mid = "floor05.bmp",
         .right = "floor06.bmp",
+        .sign = "sign02.bmp",
     },
     {
         .left = "floor07.bmp",
         .mid = "floor08.bmp",
         .right = "floor09.bmp",
+        .sign = "sign03.bmp",
     },
     {
         .left = "floor10.bmp",
         .mid = "floor11.bmp",
         .right = "floor12.bmp",
+        .sign = "sign04.bmp",
     },
     {
         .left = "floor12a.bmp",
         .mid = "floor12b.bmp",
         .right = "floor12c.bmp",
+        .sign = "sign04a.bmp",
     },
     {
         .left = "floor13.bmp",
         .mid = "floor14.bmp",
         .right = "floor15.bmp",
+        .sign = "sign05.bmp",
     },
     {
         .left = "floor16.bmp",
         .mid = "floor17.bmp",
         .right = "floor18.bmp",
+        .sign = "sign06.bmp",
     },
     {
         .left = "floor18a.bmp",
         .mid = "floor18b.bmp",
         .right = "floor18c.bmp",
+        .sign = "sign06a.bmp",
     },
     {
         .left = "floor19.bmp",
         .mid = "floor20.bmp",
         .right = "floor21.bmp",
+        .sign = "sign07.bmp",
     },
     {
         .left = "floor22.bmp",
         .mid = "floor23.bmp",
         .right = "floor24.bmp",
+        .sign = "sign08.bmp",
     },
     {
         .left = "floor25.bmp",
         .mid = "floor26.bmp",
         .right = "floor27.bmp",
+        .sign = "sign09.bmp",
     },
 };
 

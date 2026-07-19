@@ -88,6 +88,7 @@ sources = files(
   'instructions.c',
   'keyboard.c',
   'keymap.c',
+  'level.c',
   'menu.c',
   'music.c',
   'music_volume.c',

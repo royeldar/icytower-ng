@@ -2,6 +2,8 @@
 
 #include <stdbool.h>
 
+#include "level.h"
+
 struct shared_state {
     unsigned int frame;
     bool fullscreen;
@@ -20,6 +22,7 @@ struct shared_state {
     bool rejump;
     int character;
     int start_floor;
+    struct platform platforms[32];
     int screen_y;
 };
 

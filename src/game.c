@@ -6,6 +6,7 @@
 #include <allegro5/allegro.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
 
 #include "character.h"
@@ -18,6 +19,7 @@
 #include "game.h"
 #include "gameplay.h"
 #include "keyboard.h"
+#include "level.h"
 #include "menu.h"
 #include "music_volume.h"
 #include "random.h"
@@ -183,6 +185,7 @@ void update_frame(struct shared_state *shared_state) {
     shared_state->start_floor = g_start_floor;
     shared_state->menu_animation_ticks = g_menu_animation_ticks;
     shared_state->heroface_animation_frame = g_heroface_animation_frame;
+    memcpy(shared_state->platforms, g_platforms, sizeof(g_platforms));
     shared_state->screen_y = g_screen_y;
 }
 
