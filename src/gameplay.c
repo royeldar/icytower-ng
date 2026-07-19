@@ -66,6 +66,8 @@ static int jump_streak;
 static bool quit;
 static bool wait_resume;
 
+static int wide_level;
+
 /**
  * @brief Initialize the gameplay scene
  */
@@ -96,6 +98,7 @@ void initialize_gameplay() {
     jump_streak = 0;
     quit = false;
     wait_resume = false;
+    wide_level = 50;
     play_music(g_characters[g_character].sfx_bgmusic);
     play_sound(g_characters[g_character].sfx_greeting, false, false, NULL);
 }
@@ -319,6 +322,16 @@ static void update_death() {
     }
 }
 
+static void update_wide_level() {
+    if (g_last_level >= wide_level) {
+        play_sound("aight.ogg", false, false, NULL);
+        if (wide_level < 1000)
+            wide_level += 50;
+        else
+            wide_level += 500;
+    }
+}
+
 static void update_edge_sfx() {
     if (g_edge_state == EDGE_STATE_IDLE)
         edge_ticks = 0;
@@ -391,6 +404,7 @@ void update_gameplay() {
             update_collisions();
             update_score();
             update_death();
+            update_wide_level();
             update_edge_sfx();
             update_animations();
             update_pause();
