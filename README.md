@@ -120,3 +120,15 @@ Uninstallation can be done by running
 ```sh
 ./scripts/debug/uninstall.sh
 ```
+
+## TODO
+
+* Implement replay loading and saving
+* Add support for custom characters
+* Add ability to unlock floors
+* Add highscore tables
+* Implement missing visual effects (stars & hue-shifting)
+* Add controller support
+* Add screenshot functionality
+* Add fade transitions between game scenes
+* Add a desktop icon
