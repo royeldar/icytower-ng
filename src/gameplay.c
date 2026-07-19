@@ -165,6 +165,11 @@ static void update_screen() {
     prev_y += screen_dy;
 }
 
+static void update_platforms() {
+    if ((g_screen_y % 16 < prev_screen_y % 16) || (g_screen_y - prev_screen_y >= 16))
+        generate_new_platform();
+}
+
 static void update_death() {
     if (g_y > 540.0 && !g_death) {
         g_death = 1;
@@ -228,6 +233,7 @@ void update_gameplay() {
             update_movement();
             update_position();
             update_screen();
+            update_platforms();
             update_death();
             update_animations();
             update_pause();
