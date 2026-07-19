@@ -14,8 +14,10 @@
 #include "gameplay.h"
 #include "gfx.h"
 #include "level.h"
+#include "music.h"
 #include "random.h"
 #include "shared_state.h"
+#include "sound.h"
 
 static unsigned int seed;
 
@@ -48,6 +50,8 @@ void initialize_gameplay() {
     g_jump_state = JUMP_STATE_IDLE;
     g_edge_state = EDGE_STATE_IDLE;
     g_spinning = false;
+    play_music(g_characters[g_character].sfx_bgmusic);
+    play_sound(g_characters[g_character].sfx_greeting, false, false, NULL);
 }
 
 static void update_animations() {
