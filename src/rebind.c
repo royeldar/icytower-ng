@@ -44,7 +44,7 @@ void initialize_rebind() {
  */
 void update_rebind() {
     if (is_key_pressed(ALLEGRO_KEY_ESCAPE)) {
-        play_sound("menu_change.ogg");
+        play_sound("menu_change.ogg", false, false, NULL);
         g_scene = MENU_SCENE;
     } else {
         int keycode;
@@ -53,7 +53,7 @@ void update_rebind() {
                 break;
         }
         if (keycode != ALLEGRO_KEY_MAX) {
-            play_sound("menu_change.ogg");
+            play_sound("menu_change.ogg", false, false, NULL);
             *key = keycode;
             g_scene = MENU_SCENE;
         }

@@ -76,16 +76,16 @@ static void update_menu_page() {
     }
     assert(count > 0);
     if (down) {
-        play_sound("menu_choose.ogg");
+        play_sound("menu_choose.ogg", false, false, NULL);
         g_menu_item = (g_menu_item + 1) % count;
     } else if (up) {
-        play_sound("menu_choose.ogg");
+        play_sound("menu_choose.ogg", false, false, NULL);
         g_menu_item = (g_menu_item - 1 + count) % count;
     } else if (escape && (g_menu_item != count - 1)) {
-        play_sound("menu_choose.ogg");
+        play_sound("menu_choose.ogg", false, false, NULL);
         g_menu_item = count - 1;
     } else if ((escape || select) && (g_menu_item == count - 1)) {
-        play_sound("menu_change.ogg");
+        play_sound("menu_change.ogg", false, false, NULL);
         switch (g_menu_page) {
         case MAIN_PAGE:
             g_scene = EXIT_SCENE;
@@ -113,71 +113,71 @@ static void update_menu_page() {
         }
     } else if (select) {
         if ((g_menu_page == MAIN_PAGE) && (g_menu_item == 0)) {
-            play_sound("menu_change.ogg");
+            play_sound("menu_change.ogg", false, false, NULL);
             stop_music();
             g_scene = GAMEPLAY_SCENE;
         } else if ((g_menu_page == MAIN_PAGE) && (g_menu_item == 1)) {
             // TODO replay
         } else if ((g_menu_page == MAIN_PAGE) && (g_menu_item == 2)) {
-            play_sound("menu_change.ogg");
+            play_sound("menu_change.ogg", false, false, NULL);
             g_scene = INSTRUCTIONS_SCENE;
         } else if ((g_menu_page == MAIN_PAGE) && (g_menu_item == 3)) {
-            play_sound("menu_change.ogg");
+            play_sound("menu_change.ogg", false, false, NULL);
             g_menu_page = OPTIONS_PAGE;
             g_menu_item = 0;
         } else if ((g_menu_page == OPTIONS_PAGE) && (g_menu_item == 0)) {
-            play_sound("menu_change.ogg");
+            play_sound("menu_change.ogg", false, false, NULL);
             g_menu_page = GAME_OPTIONS_PAGE;
             g_menu_item = 0;
         } else if ((g_menu_page == OPTIONS_PAGE) && (g_menu_item == 1)) {
-            play_sound("menu_change.ogg");
+            play_sound("menu_change.ogg", false, false, NULL);
             g_menu_page = GFX_OPTIONS_PAGE;
             g_menu_item = 0;
         } else if ((g_menu_page == OPTIONS_PAGE) && (g_menu_item == 2)) {
-            play_sound("menu_change.ogg");
+            play_sound("menu_change.ogg", false, false, NULL);
             g_menu_page = SOUND_OPTIONS_PAGE;
             g_menu_item = 0;
         } else if ((g_menu_page == OPTIONS_PAGE) && (g_menu_item == 3)) {
-            play_sound("menu_change.ogg");
+            play_sound("menu_change.ogg", false, false, NULL);
             g_menu_page = CONTROLS_PAGE;
             g_menu_item = 0;
         } else if ((g_menu_page == GFX_OPTIONS_PAGE) && (g_menu_item == 1)) {
-            play_sound("menu_change.ogg");
+            play_sound("menu_change.ogg", false, false, NULL);
             g_fullscreen = !g_fullscreen;
         } else if ((g_menu_page == CONTROLS_PAGE) && (g_menu_item < 4)) {
-            play_sound("menu_change.ogg");
+            play_sound("menu_change.ogg", false, false, NULL);
             g_scene = REBIND_SCENE;
         } else if ((g_menu_page == CONTROLS_PAGE) && (g_menu_item == 4)) {
-            play_sound("menu_change.ogg");
+            play_sound("menu_change.ogg", false, false, NULL);
             g_rejump = !g_rejump;
         }
     } else if (left || right) {
         if ((g_menu_page == GAME_OPTIONS_PAGE) && (g_menu_item == 0)) {
-            play_sound("menu_change.ogg");
+            play_sound("menu_change.ogg", false, false, NULL);
             if (left && (g_character > 0))
                 g_character--;
             else if (right && (g_character < NUM_CHARACTERS - 1))
                 g_character++;
         } else if ((g_menu_page == GAME_OPTIONS_PAGE) && (g_menu_item == 1)) {
-            play_sound("menu_change.ogg");
+            play_sound("menu_change.ogg", false, false, NULL);
             if (left && (g_start_floor > 0))
                 g_start_floor--;
             else if (right && (g_start_floor < NUM_FLOORS - 1))
                 g_start_floor++;
         } else if ((g_menu_page == GFX_OPTIONS_PAGE) && (g_menu_item == 0)) {
-            play_sound("menu_change.ogg");
+            play_sound("menu_change.ogg", false, false, NULL);
             if (left && (g_eye_candy > 0))
                 g_eye_candy--;
             else if (right && (g_eye_candy < MAX_EYE_CANDY))
                 g_eye_candy++;
         } else if ((g_menu_page == SOUND_OPTIONS_PAGE) && (g_menu_item == 0)) {
-            play_sound("menu_change.ogg");
+            play_sound("menu_change.ogg", false, false, NULL);
             if (left && (g_sound_volume > 0))
                 g_sound_volume--;
             else if (right && (g_sound_volume < MAX_SOUND_VOLUME))
                 g_sound_volume++;
         } else if ((g_menu_page == SOUND_OPTIONS_PAGE) && (g_menu_item == 1)) {
-            play_sound("menu_change.ogg");
+            play_sound("menu_change.ogg", false, false, NULL);
             if (left && (g_music_volume > 0)) {
                 g_music_volume--;
                 update_music();
