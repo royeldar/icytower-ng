@@ -32,6 +32,7 @@ struct shared_state {
     double rotation_angle;
     unsigned int gameplay_animation_ticks;
     int character_animation_frame;
+    int death;
     bool pause;
     bool escape;
 };

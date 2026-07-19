@@ -26,6 +26,7 @@ extern bool g_spinning;
 extern double g_rotation_angle;
 extern unsigned int g_gameplay_animation_ticks;
 extern int g_character_animation_frame;
+extern int g_death;
 extern bool g_pause;
 extern bool g_escape;
 

@@ -38,6 +38,8 @@ double g_rotation_angle;
 unsigned int g_gameplay_animation_ticks = 0;
 int g_character_animation_frame = 0;
 
+int g_death;
+
 bool g_pause;
 bool g_escape;
 
@@ -46,6 +48,7 @@ static bool jumped;
 static int prev_x;
 static int prev_y;
 
+static bool quit;
 static bool wait_resume;
 
 /**
@@ -64,9 +67,11 @@ void initialize_gameplay() {
     g_jump_state = JUMP_STATE_IDLE;
     g_edge_state = EDGE_STATE_IDLE;
     g_spinning = false;
+    g_death = 0;
     g_pause = false;
     g_escape = false;
     jumped = true;
+    quit = false;
     wait_resume = false;
     play_music(g_characters[g_character].sfx_bgmusic);
     play_sound(g_characters[g_character].sfx_greeting, false, false, NULL);
@@ -131,6 +136,13 @@ static void update_position() {
     }
 }
 
+static void update_death() {
+    if (g_y > 540.0 && !g_death) {
+        g_death = 1;
+        play_sound(g_characters[g_character].sfx_death, true, false, NULL);
+    }
+}
+
 static void update_animations() {
     if (++g_gameplay_animation_ticks == 50)
         g_gameplay_animation_ticks = 0;
@@ -139,14 +151,20 @@ static void update_animations() {
             g_character_animation_frame = 0;
     if (g_spinning)
         g_rotation_angle += al_fixtof(8 * al_fixtorad_r);
+    if (g_death && g_death < 300)
+        g_death += 8;
 }
 
 static void update_pause() {
     if (is_key_pressed(ALLEGRO_KEY_ESCAPE)) {
-        g_pause = true;
-        g_escape = true;
-        play_sound(g_characters[g_character].sfx_pause, true, false, NULL);
-    } else if (is_key_pressed(g_pause_key)) {
+        if (g_death) {
+            quit = true;
+        } else {
+            g_pause = true;
+            g_escape = true;
+            play_sound(g_characters[g_character].sfx_pause, true, false, NULL);
+        }
+    } else if (is_key_pressed(g_pause_key) && !g_death) {
         g_pause = true;
         g_escape = false;
         play_sound(g_characters[g_character].sfx_pause, true, false, NULL);
@@ -177,10 +195,15 @@ static void update_resume() {
  */
 void update_gameplay() {
     if (!g_pause) {
-        update_movement();
-        update_position();
-        update_animations();
-        update_pause();
+        if (!quit) {
+            update_movement();
+            update_position();
+            update_death();
+            update_animations();
+            update_pause();
+        } else {
+            // TODO
+        }
     } else {
         update_resume();
     }
