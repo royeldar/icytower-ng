@@ -203,6 +203,9 @@ void update_frame(struct shared_state *shared_state) {
     shared_state->death = g_death;
     shared_state->pause = g_pause;
     shared_state->escape = g_escape;
+    shared_state->clock_ticks = g_clock_ticks;
+    shared_state->clock_speed = g_clock_speed;
+    shared_state->hurryup_y = g_hurryup_y;
     shared_state->combo_timer = g_combo_timer;
     shared_state->combo_current = g_combo_current;
     shared_state->combo_score = g_combo_score;

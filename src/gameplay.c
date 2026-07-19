@@ -46,6 +46,11 @@ int g_death;
 bool g_pause;
 bool g_escape;
 
+int g_clock_ticks;
+int g_clock_speed;
+
+int g_hurryup_y;
+
 int g_combo_timer;
 int g_combo_current;
 int g_combo_score;
@@ -65,6 +70,8 @@ static bool jumped;
 static int prev_x;
 static int prev_y;
 static int prev_screen_y;
+
+static int ticks;
 
 static int jump_streak;
 
@@ -98,6 +105,9 @@ void initialize_gameplay() {
     g_death = 0;
     g_pause = false;
     g_escape = false;
+    g_clock_ticks = 0;
+    g_clock_speed = 0;
+    g_hurryup_y = 480;
     g_combo_timer = 0;
     g_combo_current = 0;
     g_combo_score = 0;
@@ -106,6 +116,7 @@ void initialize_gameplay() {
     g_reward_timer = 0;
     g_last_level = 0;
     jumped = true;
+    ticks = 0;
     jump_streak = 0;
     death_sfx_playing = false;
     death_ticks = 0;
@@ -116,6 +127,10 @@ void initialize_gameplay() {
     wide_level = 50;
     play_music(g_characters[g_character].sfx_bgmusic);
     play_sound(g_characters[g_character].sfx_greeting, false, false, NULL);
+}
+
+static void update_ticks() {
+    ticks++;
 }
 
 static void update_movement() {
@@ -203,6 +218,34 @@ static void update_screen() {
     g_screen_y += screen_dy;
     g_y += screen_dy;
     prev_y += screen_dy;
+}
+
+static void update_clock() {
+    if (!g_death && g_screen_y > 100) {
+        int dy;
+        g_clock_ticks++;
+        if (g_clock_speed == 0)
+            dy = ticks % 2;
+        else
+            dy = g_clock_speed;
+        g_screen_y += dy;
+        g_y += dy;
+        prev_y += dy;
+    }
+    if (g_hurryup_y < 480 && g_hurryup_y > -100)
+        g_hurryup_y -= 2;
+    if (!g_death) {
+        if (g_clock_speed < 5) {
+            if (g_clock_ticks > 1500 * (g_clock_speed + 1)) {
+                g_clock_speed++;
+                g_hurryup_y = 479;
+                play_sound("hurryup.ogg", false, false, NULL);
+                play_sound("ring.ogg", false, false, NULL);
+            }
+        } else {
+            g_clock_ticks -= 45;
+        }
+    }
 }
 
 static void update_platforms() {
@@ -450,9 +493,11 @@ static void update_resume() {
 void update_gameplay() {
     if (!g_pause) {
         if (!quit) {
+            update_ticks();
             update_movement();
             update_position();
             update_screen();
+            update_clock();
             update_platforms();
             update_collisions();
             update_score();
@@ -479,6 +524,14 @@ static void draw_background(const struct shared_state *shared_state) {
         al_draw_bitmap_region(background_texture, 60, 0, 520, 64,
             60, (screen_y % 128) / 2 + (i - 1) * 64, 0);
     }
+}
+
+static void draw_hurryup(const struct shared_state *shared_state) {
+    ALLEGRO_BITMAP *hurryup = get_gfx_bitmap("hurryup.bmp");
+    int w = al_get_bitmap_width(hurryup);
+    int hurryup_y = shared_state->hurryup_y;
+    if (hurryup_y < 480 && hurryup_y > -100)
+        al_draw_bitmap(hurryup, 320 - w / 2, hurryup_y, 0);
 }
 
 static void draw_platforms(const struct shared_state *shared_state) {
@@ -665,6 +718,33 @@ static void draw_combo(const struct shared_state *shared_state) {
     }
 }
 
+static void draw_clock(const struct shared_state *shared_state) {
+    ALLEGRO_BITMAP *clock = get_gfx_bitmap("clock.bmp");
+    ALLEGRO_BITMAP *clock_hand = get_gfx_bitmap("clock_hand.bmp");
+    int gameplay_animation_ticks = shared_state->gameplay_animation_ticks;
+    int hurryup_y = shared_state->hurryup_y;
+    int clock_ticks = shared_state->clock_ticks;
+    int clock_x = 4;
+    int clock_y = 10;
+    int clock_hand_x = 32;
+    int clock_hand_y = 28;
+    float clock_hand_w = al_get_bitmap_width(clock_hand);
+    float clock_hand_h = al_get_bitmap_height(clock_hand);
+    float clock_hand_angle = al_fixtof(al_fixmul(al_ftofix(((clock_ticks) % 1500) * 0.1706666), al_fixtorad_r));
+    if (hurryup_y < 480 && hurryup_y > 250) {
+        clock_x += gameplay_animation_ticks % 3 - 1;
+        clock_y += (gameplay_animation_ticks + 1) % 3 - 1;
+    }
+    al_draw_bitmap(clock, clock_x, clock_y, 0);
+    if (hurryup_y < 480 && hurryup_y > 200) {
+        clock_hand_x += (gameplay_animation_ticks + 2) % 3 - 1;
+        clock_hand_y += (gameplay_animation_ticks + 3) % 3 - 1;
+    }
+    al_draw_rotated_bitmap(clock_hand, clock_hand_w / 2, clock_hand_h / 2,
+        clock_hand_x + clock_hand_w / 2, clock_hand_y + clock_hand_h / 2,
+        clock_hand_angle, 0);
+}
+
 static void draw_reward(const struct shared_state *shared_state) {
     int reward_timer = shared_state->reward_timer;
     if (reward_timer != 0) {
@@ -770,10 +850,12 @@ static void draw_pause(const struct shared_state *shared_state) {
  */
 void draw_gameplay(const struct shared_state *shared_state) {
     draw_background(shared_state);
+    draw_hurryup(shared_state);
     draw_platforms(shared_state);
     draw_character(shared_state);
     draw_walls(shared_state);
     draw_combo(shared_state);
+    draw_clock(shared_state);
     draw_reward(shared_state);
     draw_gameover(shared_state);
     draw_score(shared_state);

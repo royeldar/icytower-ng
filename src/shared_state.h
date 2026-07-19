@@ -36,6 +36,9 @@ struct shared_state {
     int death;
     bool pause;
     bool escape;
+    int clock_ticks;
+    int clock_speed;
+    int hurryup_y;
     int combo_timer;
     int combo_current;
     int combo_score;
