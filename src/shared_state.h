@@ -6,6 +6,7 @@
 
 struct shared_state {
     unsigned int frame;
+    unsigned char overlay_alpha;
     int offset_x, offset_y;
     bool fullscreen;
     int scene;

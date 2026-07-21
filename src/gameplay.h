@@ -43,5 +43,6 @@ extern int g_reward_size;
 extern int g_last_level;
 
 void initialize_gameplay();
+void finalize_gameplay();
 void update_gameplay();
 void draw_gameplay(const struct shared_state *shared_state);

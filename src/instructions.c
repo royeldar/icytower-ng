@@ -17,11 +17,17 @@ void initialize_instructions() {
 }
 
 /**
+ * @brief Finalize the instructions scene
+ */
+void finalize_instructions() {
+}
+
+/**
  * @brief Update the instructions scene one tick
  */
 void update_instructions() {
     if (is_key_pressed(ALLEGRO_KEY_ESCAPE) || is_key_pressed(ALLEGRO_KEY_ENTER) || is_key_pressed(ALLEGRO_KEY_SPACE))
-        g_scene = MENU_SCENE;
+        transition_scene(MENU_SCENE, 16);
 }
 
 /**

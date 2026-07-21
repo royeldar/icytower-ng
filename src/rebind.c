@@ -40,12 +40,18 @@ void initialize_rebind() {
 }
 
 /**
+ * @brief Finalize the rebind scene
+ */
+void finalize_rebind() {
+}
+
+/**
  * @brief Update the rebind scene one tick
  */
 void update_rebind() {
     if (is_key_pressed(ALLEGRO_KEY_ESCAPE)) {
         play_sound("menu_change.ogg", false, false, NULL);
-        g_scene = MENU_SCENE;
+        transition_scene(MENU_SCENE, 0);
     } else {
         int keycode;
         for (keycode = 1; keycode < ALLEGRO_KEY_MAX; ++keycode) {
@@ -55,7 +61,7 @@ void update_rebind() {
         if (keycode != ALLEGRO_KEY_MAX) {
             play_sound("menu_change.ogg", false, false, NULL);
             *key = keycode;
-            g_scene = MENU_SCENE;
+            transition_scene(MENU_SCENE, 0);
         }
     }
 }

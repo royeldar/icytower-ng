@@ -17,5 +17,6 @@ extern unsigned int g_menu_animation_ticks;
 extern int g_heroface_animation_frame;
 
 void initialize_menu();
+void finalize_menu();
 void update_menu();
 void draw_menu(const struct shared_state *shared_state);

@@ -38,6 +38,12 @@ void initialize_menu() {
     play_music("bg_menu.ogg");
 }
 
+/**
+ * @brief Finalize the menu scene
+ */
+void finalize_menu() {
+}
+
 static void update_heroface_animation() {
     g_menu_animation_ticks++;
     if (rand_custom() % 198 == 1) {
@@ -88,7 +94,7 @@ static void update_menu_page() {
         play_sound("menu_change.ogg", false, false, NULL);
         switch (g_menu_page) {
         case MAIN_PAGE:
-            g_scene = EXIT_SCENE;
+            transition_scene(CREDITS_SCENE, 32);
             break;
         case OPTIONS_PAGE:
             g_menu_page = MAIN_PAGE;
@@ -114,13 +120,12 @@ static void update_menu_page() {
     } else if (select) {
         if ((g_menu_page == MAIN_PAGE) && (g_menu_item == 0)) {
             play_sound("menu_change.ogg", false, false, NULL);
-            stop_music();
-            g_scene = GAMEPLAY_SCENE;
+            transition_scene(GAMEPLAY_SCENE, 16);
         } else if ((g_menu_page == MAIN_PAGE) && (g_menu_item == 1)) {
             // TODO replay
         } else if ((g_menu_page == MAIN_PAGE) && (g_menu_item == 2)) {
             play_sound("menu_change.ogg", false, false, NULL);
-            g_scene = INSTRUCTIONS_SCENE;
+            transition_scene(INSTRUCTIONS_SCENE, 16);
         } else if ((g_menu_page == MAIN_PAGE) && (g_menu_item == 3)) {
             play_sound("menu_change.ogg", false, false, NULL);
             g_menu_page = OPTIONS_PAGE;
@@ -146,7 +151,7 @@ static void update_menu_page() {
             g_fullscreen = !g_fullscreen;
         } else if ((g_menu_page == CONTROLS_PAGE) && (g_menu_item < 4)) {
             play_sound("menu_change.ogg", false, false, NULL);
-            g_scene = REBIND_SCENE;
+            transition_scene(REBIND_SCENE, 0);
         } else if ((g_menu_page == CONTROLS_PAGE) && (g_menu_item == 4)) {
             play_sound("menu_change.ogg", false, false, NULL);
             g_rejump = !g_rejump;

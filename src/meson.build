@@ -75,6 +75,7 @@ sources = files(
   'character.c',
   'config.c',
   'controls.c',
+  'credits.c',
   'events.c',
   'exit.c',
   'flatpak.c',

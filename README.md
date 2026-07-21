@@ -130,5 +130,4 @@ Uninstallation can be done by running
 * Implement missing visual effects (stars & hue-shifting)
 * Add controller support
 * Add screenshot functionality
-* Add fade transitions between game scenes
 * Add a desktop icon

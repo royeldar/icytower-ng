@@ -162,8 +162,8 @@ bool game_setup() {
     rand_msvc();
     srand_custom(rand_msvc() % 2367);
 
-    // initialize game scene
-    initialize_scene();
+    // transition to menu scene
+    transition_scene(MENU_SCENE, 16);
 
     return true;
 }
@@ -171,6 +171,7 @@ bool game_setup() {
 void update_frame(struct shared_state *shared_state) {
     update_scene(&quit);
     shared_state->frame = ++frame;
+    shared_state->overlay_alpha = g_overlay_alpha;
     shared_state->offset_x = g_offset_x;
     shared_state->offset_y = g_offset_y;
     shared_state->fullscreen = g_fullscreen;

@@ -26,6 +26,12 @@ void initialize_gameover() {
 }
 
 /**
+ * @brief Finalize the gameover scene
+ */
+void finalize_gameover() {
+}
+
+/**
  * @brief Update the gameover scene one tick
  */
 void update_gameover() {
@@ -45,13 +51,13 @@ void update_gameover() {
     } else if ((escape || select) && (g_gameover_item == 3)) {
         play_sound("menu_change.ogg", false, false, NULL);
         play_sound("tryagain.ogg", false, false, NULL);
-        g_scene = MENU_SCENE;
+        transition_scene(MENU_SCENE, 16);
     } else if (select) {
         switch (g_gameover_item) {
         case 0:
             play_sound("menu_change.ogg", false, false, NULL);
             play_sound("tryagain.ogg", false, false, NULL);
-            g_scene = GAMEPLAY_SCENE;
+            transition_scene(GAMEPLAY_SCENE, 16);
             break;
         case 1:
             // TODO watch replay

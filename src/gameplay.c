@@ -90,6 +90,7 @@ static int wide_level;
  * @brief Initialize the gameplay scene
  */
 void initialize_gameplay() {
+    stop_music();
     srand_custom(rand_msvc() % 102392);
     seed = rand_msvc();
     srand_msvc(seed);
@@ -125,6 +126,12 @@ void initialize_gameplay() {
     wait_resume = false;
     shake_timer = 0;
     wide_level = 50;
+}
+
+/**
+ * @brief Finalize the gameplay scene
+ */
+void finalize_gameplay() {
     play_music(g_characters[g_character].sfx_bgmusic);
     play_sound(g_characters[g_character].sfx_greeting, false, false, NULL);
 }
@@ -486,7 +493,7 @@ static void update_resume() {
     } else if (g_escape && is_key_pressed(ALLEGRO_KEY_ESCAPE)) {
         stop_music();
         play_sound("tryagain.ogg", false, false, NULL);
-        g_scene = MENU_SCENE;
+        transition_scene(MENU_SCENE, 16);
     } else if (is_any_key_pressed()) {
         g_pause = false;
         g_escape = false;
@@ -496,7 +503,7 @@ static void update_resume() {
 static void update_end() {
     stop_music();
     g_offset_y = 0;
-    g_scene = GAMEOVER_SCENE;
+    transition_scene(GAMEOVER_SCENE, 0);
 }
 
 /**
