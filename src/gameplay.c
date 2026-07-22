@@ -368,7 +368,7 @@ static void update_score() {
     if (g_jump_state == JUMP_STATE_IDLE) {
         int level = get_level(g_y);
         if (level >= g_last_level + 2) {
-            if (g_combo_timer) {
+            if (g_combo_timer != 0) {
                 g_combo_current += level - g_last_level;
                 jump_streak++;
             } else {
