@@ -127,7 +127,7 @@ Uninstallation can be done by running
 * Add support for custom characters
 * Add ability to unlock floors
 * Add highscore tables
-* Implement missing visual effects (stars & hue-shifting)
+* Implement missing visual effects (hue-shifting)
 * Add controller support
 * Add screenshot functionality
 * Add a desktop icon

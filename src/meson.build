@@ -105,6 +105,7 @@ sources = files(
   'shared_state.c',
   'sound.c',
   'sound_volume.c',
+  'stars.c',
   'synchronization.c',
   'triple_buffer.c',
   'eye_candy.c',

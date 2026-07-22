@@ -3,6 +3,7 @@
 #include <stdbool.h>
 
 #include "level.h"
+#include "stars.h"
 
 struct shared_state {
     unsigned int frame;
@@ -25,6 +26,7 @@ struct shared_state {
     int character;
     int start_floor;
     struct platform platforms[32];
+    struct star stars[512];
     int screen_y;
     double x, y;
     double dx, dy;

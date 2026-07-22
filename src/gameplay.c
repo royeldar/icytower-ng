@@ -25,6 +25,7 @@
 #include "screenshake.h"
 #include "shared_state.h"
 #include "sound.h"
+#include "stars.h"
 
 static unsigned int seed;
 
@@ -95,6 +96,7 @@ void initialize_gameplay() {
     seed = rand_msvc();
     srand_msvc(seed);
     generate_platforms();
+    initialize_stars();
     g_screen_y = 0;
     g_x = 200.0;
     g_y = 431.0;
@@ -197,6 +199,8 @@ static void update_position() {
         if (g_jump_state == JUMP_STATE_FLY_UP && g_dy > 0.0)
             g_jump_state = JUMP_STATE_FLY_DOWN;
     }
+    if (g_spinning && g_combo_timer != 0 && g_eye_candy == 2)
+        create_star(g_x, g_y - 16);
 }
 
 static void update_screen() {
@@ -360,6 +364,14 @@ static void update_score() {
             g_reward = get_reward(g_combo_current);
             g_reward_timer = 80;
             g_reward_size = 0;
+            if (g_eye_candy == 2 && g_reward >= 3) {
+                unsigned int count = 16 * (g_reward - 2);
+                while (count--) {
+                    struct star *star = create_star(320, 360);
+                    star->dy = -(rand_custom() % 500 + 500) / 100.0;
+                    star->dx = (g_reward - 2) * (rand_custom() % 1000 - 500) / 100.0;
+                }
+            }
             play_sound(g_rewards[g_reward].sfx, false, false, NULL);
         }
     }
@@ -412,6 +424,13 @@ static void update_crash() {
 static void update_wide_level() {
     if (g_last_level >= wide_level) {
         play_sound("aight.ogg", false, false, NULL);
+        if (g_eye_candy == 2) {
+            unsigned int count = wide_level / 2;
+            while (count--) {
+                struct star *star = create_star(rand_custom() % 600 + 20, 480);
+                star->dy = -(rand_custom() % 200) / 10.0;
+            }
+        }
         if (wide_level < 1000)
             wide_level += 50;
         else
@@ -513,6 +532,7 @@ void update_gameplay() {
             update_ticks();
             update_movement();
             update_position();
+            update_stars();
             update_screen();
             update_clock();
             update_platforms();
@@ -601,6 +621,20 @@ static void draw_platforms(const struct shared_state *shared_state) {
             al_draw_textf(g_font3, al_map_rgb(255, 255, 255),
                 x + 1, y + 6, ALLEGRO_ALIGN_CENTER, "%d", platform->level);
         }
+    }
+}
+
+static void draw_stars(const struct shared_state *shared_state) {
+    const struct star *stars = shared_state->stars;
+    unsigned int i;
+    for (i = 0; i < 512; ++i) {
+        const struct star *star = &stars[i];
+        if (star->timer == 0)
+            continue;
+        ALLEGRO_BITMAP *star_gfx = get_gfx_bitmap(get_star_gfx(star->color));
+        int x = (int)(star->x + 0.5);
+        int y = (int)(star->y + 0.5);
+        al_draw_bitmap(star_gfx, x, y, 0);
     }
 }
 
@@ -870,6 +904,7 @@ void draw_gameplay(const struct shared_state *shared_state) {
     draw_background(shared_state);
     draw_hurryup(shared_state);
     draw_platforms(shared_state);
+    draw_stars(shared_state);
     draw_character(shared_state);
     draw_walls(shared_state);
     draw_combo(shared_state);

@@ -30,6 +30,7 @@
 #include "sfx.h"
 #include "shared_state.h"
 #include "sound_volume.h"
+#include "stars.h"
 #include "synchronization.h"
 
 #define FPS 50
@@ -191,6 +192,7 @@ void update_frame(struct shared_state *shared_state) {
     shared_state->menu_animation_ticks = g_menu_animation_ticks;
     shared_state->heroface_animation_frame = g_heroface_animation_frame;
     memcpy(shared_state->platforms, g_platforms, sizeof(g_platforms));
+    memcpy(shared_state->stars, g_stars, sizeof(g_stars));
     shared_state->screen_y = g_screen_y;
     shared_state->x = g_x;
     shared_state->y = g_y;
