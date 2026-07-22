@@ -57,7 +57,7 @@ int g_combo_score;
 int g_combo_last;
 int g_combo_best;
 
-const char *g_reward_gfx;
+unsigned int g_reward;
 int g_reward_timer;
 int g_reward_size;
 
@@ -350,7 +350,6 @@ static void update_collisions() {
 }
 
 static void update_score() {
-    struct reward *reward = NULL;
     if (g_combo_timer != 0) {
         g_combo_timer--;
         if (g_combo_timer == 0 && jump_streak >= 2) {
@@ -358,11 +357,10 @@ static void update_score() {
             g_combo_last = g_combo_current;
             if (g_combo_current > g_combo_best)
                 g_combo_best = g_combo_current;
-            reward = get_reward(g_combo_current);
-            g_reward_gfx = reward->gfx;
+            g_reward = get_reward(g_combo_current);
             g_reward_timer = 80;
             g_reward_size = 0;
-            play_sound(reward->sfx, false, false, NULL);
+            play_sound(g_rewards[g_reward].sfx, false, false, NULL);
         }
     }
     if (g_jump_state == JUMP_STATE_IDLE) {
@@ -768,25 +766,25 @@ static void draw_clock(const struct shared_state *shared_state) {
 static void draw_reward(const struct shared_state *shared_state) {
     int reward_timer = shared_state->reward_timer;
     if (reward_timer != 0) {
-        const char *reward_gfx = shared_state->reward_gfx;
+        unsigned int reward = shared_state->reward;
         int reward_size = shared_state->reward_size;
         int eye_candy = shared_state->eye_candy;
-        ALLEGRO_BITMAP *reward;
+        ALLEGRO_BITMAP *reward_gfx;
         float width, height;
         double scale = reward_size / 65536.0;
-        assert(reward_gfx != NULL);
-        reward = get_gfx_bitmap(reward_gfx);
-        width = al_get_bitmap_width(reward);
-        height = al_get_bitmap_height(reward);
+        assert(reward < NUM_REWARDS);
+        reward_gfx = get_gfx_bitmap(g_rewards[g_reward].gfx);
+        width = al_get_bitmap_width(reward_gfx);
+        height = al_get_bitmap_height(reward_gfx);
         if (eye_candy == 1)
-            al_draw_scaled_bitmap(reward, 0, 0, width, height,
+            al_draw_scaled_bitmap(reward_gfx, 0, 0, width, height,
                 320 - (scale / 2) * width,
                 360 - scale * height,
                 scale * width,
                 scale * height,
                 0);
         else if (eye_candy == 2)
-            al_draw_scaled_rotated_bitmap(reward, width / 2, height / 2,
+            al_draw_scaled_rotated_bitmap(reward_gfx, width / 2, height / 2,
                 320,
                 360 + scale * (height - 120.0),
                 scale, scale,

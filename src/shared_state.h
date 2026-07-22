@@ -45,7 +45,7 @@ struct shared_state {
     int combo_score;
     int combo_last;
     int combo_best;
-    const char *reward_gfx;
+    unsigned int reward;
     int reward_timer;
     int reward_size;
     int last_level;

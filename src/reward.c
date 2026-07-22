@@ -7,9 +7,7 @@
 
 #include "reward.h"
 
-#define NUM_REWARDS 10
-
-static struct reward rewards[NUM_REWARDS] = {
+struct reward g_rewards[NUM_REWARDS] = {
     {
         .gfx = "reward000.bmp",
         .sfx = "good.ogg",
@@ -52,7 +50,7 @@ static struct reward rewards[NUM_REWARDS] = {
     },
 };
 
-struct reward *get_reward(int total) {
+unsigned int get_reward(int total) {
     unsigned int i;
     if (total < 7)
         i = 0;
@@ -75,5 +73,5 @@ struct reward *get_reward(int total) {
     else
         i = 9;
     assert(i < NUM_REWARDS);
-    return &rewards[i];
+    return i;
 }
