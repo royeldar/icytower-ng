@@ -266,9 +266,10 @@ static void update_platforms() {
 
 static bool get_platform(int y, int *platform_y, int *platform_x_left, int *platform_x_right, int *platform_level) {
     struct platform *platform;
-    unsigned int i = 29 - (y + 1) / 16;
-    if (i >= 32)
+    unsigned int i;
+    if (y < -33 || y > 478)
         return false;
+    i = 31 - (y + 33) / 16;
     platform = &g_platforms[i];
     if (platform->pad == 0) {
         *platform_y = g_screen_y % 16 + 16 * (29 - i);
@@ -283,9 +284,10 @@ static bool get_platform(int y, int *platform_y, int *platform_x_left, int *plat
 
 static int get_level(int y) {
     struct platform *platform;
-    unsigned int i = 29 - (y + 1) / 16;
-    if (i >= 32)
+    unsigned int i;
+    if (y < -33 || y > 478)
         return 0;
+    i = 31 - (y + 33) / 16;
     platform = &g_platforms[i];
     return platform->level;
 }
