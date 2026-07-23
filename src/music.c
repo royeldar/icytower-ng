@@ -26,8 +26,9 @@ bool play_music(const char *path) {
         music_playing = al_play_sample(get_sfx_sample(path),
             (float)g_music_volume / (float)MAX_MUSIC_VOLUME, 0.0, 1.0,
             ALLEGRO_PLAYMODE_LOOP, &music_id);
+        return music_playing;
     }
-    return music_playing;
+    return false;
 }
 
 /**
