@@ -148,7 +148,7 @@ void transition_scene(enum scene new_scene, unsigned char speed) {
         transition_speed = speed;
         next_scene = new_scene;
     } else {
-        bool quit;
+        bool quit = false;
         assert(new_scene != EXIT_SCENE);
         g_overlay_alpha = 0;
         g_scene = new_scene;
