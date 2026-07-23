@@ -759,12 +759,13 @@ static void draw_combo(const struct shared_state *shared_state) {
     int combo_timer = shared_state->combo_timer;
     int combo_current = shared_state->combo_current;
     int combo_last = shared_state->combo_last;
+    int reward_timer = shared_state->reward_timer;
     al_draw_bitmap(combo_meter, 20, 100, 0);
     if (combo_timer != 0) {
         al_draw_bitmap_region(combo_liquid, 0, 100 - combo_timer, 16, combo_timer, 31, 219 - combo_timer, 0);
         al_draw_bitmap(combo_count, -10, 210, 0);
         al_draw_textf(g_font1, al_map_rgb(255, 255, 255), 40, 214, ALLEGRO_ALIGN_CENTER, "%d", combo_current);
-    } else if (g_reward_timer != 0) {
+    } else if (reward_timer != 0) {
         al_draw_bitmap(combo_count, -10, 210, 0);
         al_draw_textf(g_font1, al_map_rgb(255, 255, 255), 40, 214, ALLEGRO_ALIGN_CENTER, "%d", combo_last);
     }
@@ -807,7 +808,7 @@ static void draw_reward(const struct shared_state *shared_state) {
         float width, height;
         double scale = reward_size / 65536.0;
         assert(reward < NUM_REWARDS);
-        reward_gfx = get_gfx_bitmap(g_rewards[g_reward].gfx);
+        reward_gfx = get_gfx_bitmap(g_rewards[reward].gfx);
         width = al_get_bitmap_width(reward_gfx);
         height = al_get_bitmap_height(reward_gfx);
         if (eye_candy == 1)
