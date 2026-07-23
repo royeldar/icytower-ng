@@ -154,6 +154,7 @@ void transition_scene(enum scene new_scene, unsigned char speed) {
         g_scene = new_scene;
         initialize_scene(&quit);
         assert(!quit);
+        finalize_scene();
     }
 }
 
