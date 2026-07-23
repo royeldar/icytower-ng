@@ -244,7 +244,7 @@ static void draw_menu_page(const struct shared_state *shared_state) {
     char music_volume_str[MAX_MUSIC_VOLUME + 1];
     unsigned int i;
     int eye_candy = shared_state->eye_candy;
-    char *eye_candy_str = NULL;
+    const char *eye_candy_str = NULL;
     int left_key = shared_state->left_key;
     int right_key = shared_state->right_key;
     int jump_key = shared_state->jump_key;

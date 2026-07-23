@@ -70,7 +70,7 @@ void update_rebind() {
  * @brief Draw the rebind scene
  */
 void draw_rebind(const struct shared_state *shared_state) {
-    char *name = NULL;
+    const char *name = NULL;
     int menu_item = shared_state->menu_item;
     switch (menu_item) {
     case 0:
