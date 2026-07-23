@@ -126,7 +126,7 @@ void update_scene(bool *quit) {
             update_credits();
             break;
         case EXIT_SCENE:
-            update_credits();
+            update_exit();
             break;
         }
     } else {
