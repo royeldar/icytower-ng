@@ -160,7 +160,7 @@ void transition_scene(enum scene new_scene, unsigned char speed) {
 static void draw_overlay(const struct shared_state *shared_state) {
     unsigned char overlay_alpha = shared_state->overlay_alpha;
     if (overlay_alpha > 0)
-        al_draw_filled_rectangle(0, 0, 640, 480, al_map_rgba(0, 0, 0, overlay_alpha));
+        al_draw_filled_rectangle(0, 0, 639, 479, al_map_rgba(0, 0, 0, overlay_alpha));
 }
 
 /**
