@@ -43,11 +43,13 @@ void handle_keyboard_event(const ALLEGRO_KEYBOARD_EVENT *event) {
     assert(keycode >= 0 && keycode < ALLEGRO_KEY_MAX);
     switch (event->type) {
     case ALLEGRO_EVENT_KEY_DOWN:
-        keys[keycode] = KEY_DOWN | KEY_PRESSED;
+        keys[keycode] |= KEY_DOWN;
+        keys[keycode] |= KEY_PRESSED;
         any |= KEY_PRESSED;
         break;
     case ALLEGRO_EVENT_KEY_UP:
-        keys[keycode] = KEY_RELEASED;
+        keys[keycode] &= ~KEY_DOWN;
+        keys[keycode] |= KEY_RELEASED;
         any |= KEY_RELEASED;
         break;
     }
