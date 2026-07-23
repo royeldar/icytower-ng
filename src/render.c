@@ -103,7 +103,20 @@ static void render_loop(ALLEGRO_THREAD *thread) {
     bool redraw = true;
     while (!al_get_thread_should_stop(thread)) {
         int event = receive_event();
-        if (event == 0 && !dont_draw) {
+        if (event != 0) {
+            switch (event) {
+            case HALT_DRAWING:
+                dont_draw = true;
+                al_acknowledge_drawing_halt(display);
+                break;
+            case RESUME_DRAWING:
+                al_acknowledge_drawing_resume(display);
+                dont_draw = false;
+                redraw = true;
+                break;
+            }
+            acknowledge_event(STATUS_SUCCESS);
+        } else if (!dont_draw) {
             const struct shared_state *shared_state;
             read_shared_state();
             shared_state = get_shared_state_for_reading();
@@ -120,19 +133,6 @@ static void render_loop(ALLEGRO_THREAD *thread) {
                 render_frame(shared_state);
                 redraw = false;
             }
-        } else {
-            switch (event) {
-            case HALT_DRAWING:
-                dont_draw = true;
-                al_acknowledge_drawing_halt(display);
-                break;
-            case RESUME_DRAWING:
-                al_acknowledge_drawing_resume(display);
-                dont_draw = false;
-                redraw = true;
-                break;
-            }
-            acknowledge_event(STATUS_SUCCESS);
         }
     }
 }
