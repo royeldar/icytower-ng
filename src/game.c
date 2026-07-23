@@ -131,6 +131,9 @@ bool game_setup() {
     // initialize scene variable
     initial_shared_state.scene = (int)g_scene;
 
+    // initialize overlay alpha variable
+    initial_shared_state.overlay_alpha = g_overlay_alpha;
+
     // initialize menu variables
     initial_shared_state.menu_page = (int)g_menu_page;
     initial_shared_state.menu_item = g_menu_item;
