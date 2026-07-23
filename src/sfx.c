@@ -50,6 +50,9 @@ void destroy_sfx_samples() {
  * @return audio sample corresponding to the given filename (NULL if none)
  */
 ALLEGRO_SAMPLE *get_sfx_sample(const char *path) {
+    ALLEGRO_SAMPLE *sfx;
     assert(sfx_samples != NULL);
-    return get_resource(sfx_samples, path);
+    sfx = get_resource(sfx_samples, path);
+    assert(sfx != NULL);
+    return sfx;
 }

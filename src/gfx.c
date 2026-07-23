@@ -50,8 +50,11 @@ void destroy_gfx_bitmaps() {
  * @return bitmap corresponding to the given filename (NULL if none)
  */
 ALLEGRO_BITMAP *get_gfx_bitmap(const char *path) {
+    ALLEGRO_BITMAP *gfx;
     assert(gfx_bitmaps != NULL);
-    return get_resource(gfx_bitmaps, path);
+    gfx = get_resource(gfx_bitmaps, path);
+    assert(gfx != NULL);
+    return gfx;
 }
 
 /**
