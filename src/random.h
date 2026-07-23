@@ -1,3 +1,5 @@
+#pragma once
+
 void srand_msvc(unsigned int seed);
 int rand_msvc();
 
