@@ -1,4 +1,5 @@
 #include <allegro5/allegro.h>
+#include <assert.h>
 
 #include "keymap.h"
 

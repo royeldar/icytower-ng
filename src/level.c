@@ -4,6 +4,7 @@
 
 #include <allegro5/allegro.h>
 #include <assert.h>
+#include <string.h>
 
 #include "level.h"
 #include "random.h"

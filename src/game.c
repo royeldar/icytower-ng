@@ -6,7 +6,7 @@
 #include <allegro5/allegro.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include <stdlib.h>
+#include <string.h>
 #include <time.h>
 
 #include "character.h"

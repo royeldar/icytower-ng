@@ -4,7 +4,7 @@
 
 #include <allegro5/allegro.h>
 #include <assert.h>
-#include <stdlib.h>
+#include <string.h>
 
 #include "random.h"
 #include "stars.h"
