@@ -9,6 +9,7 @@
 #include <string.h>
 #include <time.h>
 
+#include "ai.h"
 #include "character.h"
 #include "config.h"
 #include "controls.h"
@@ -248,6 +249,7 @@ void game_loop() {
             al_stop_timer(g_timer);
             al_clear_keyboard_state(NULL);
             clear_keyboard_state();
+            clear_ai_state();
             break;
         case ALLEGRO_EVENT_DISPLAY_SWITCH_IN:
             pause = false;
@@ -263,7 +265,10 @@ void game_loop() {
             break;
         }
         if (update) {
-            struct shared_state *shared_state = get_shared_state_for_writing();
+            struct shared_state *shared_state;
+            update_ai();
+            do_ai_tick();
+            shared_state = get_shared_state_for_writing();
             update_frame(shared_state);
             write_shared_state();
             do_keyboard_tick();

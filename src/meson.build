@@ -75,6 +75,7 @@ endif
 
 sources = files(
   'main.c',
+  'ai.c',
   'background.c',
   'character.c',
   'config.c',

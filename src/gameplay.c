@@ -8,6 +8,7 @@
 #include <math.h>
 #include <stdbool.h>
 
+#include "ai.h"
 #include "background.h"
 #include "character.h"
 #include "controls.h"
@@ -398,6 +399,7 @@ static void update_score() {
 
 static void update_death() {
     if (g_y > 540.0 && !g_death) {
+        clear_ai_state();
         g_combo_timer = 0;
         g_death = 1;
         death_sfx_playing = play_sound(g_characters[g_character].sfx_death, true, false, &death_sfx_sample);
@@ -489,11 +491,13 @@ static void update_pause() {
         if (g_death) {
             quit = true;
         } else {
+            clear_ai_state();
             g_pause = true;
             g_escape = true;
             play_sound(g_characters[g_character].sfx_pause, true, false, NULL);
         }
     } else if (is_key_pressed(g_pause_key) && !g_death) {
+        clear_ai_state();
         g_pause = true;
         g_escape = false;
         play_sound(g_characters[g_character].sfx_pause, true, false, NULL);

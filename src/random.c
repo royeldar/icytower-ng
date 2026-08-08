@@ -27,3 +27,7 @@ int rand_custom() {
     seed_custom = seed;
     return 65535.0f * ((long double)seed - (long double)(int)seed);
 }
+
+unsigned int get_rand_msvc_state() {
+    return seed_msvc;
+}
