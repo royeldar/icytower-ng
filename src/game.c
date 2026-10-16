@@ -172,7 +172,7 @@ bool game_setup() {
     return true;
 }
 
-void update_frame(struct shared_state *shared_state) {
+static void update_frame(struct shared_state *shared_state) {
     update_scene(&quit);
     shared_state->frame = ++frame;
     shared_state->overlay_alpha = g_overlay_alpha;
